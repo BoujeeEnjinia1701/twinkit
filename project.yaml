@@ -1,0 +1,17 @@
+# Card metadata consumed by https://designmolecule.com
+name: TwinKit
+slug: twinkit
+area: Digital Twins
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  An open digital twin starter kit: a small edge gateway that collects readings from lab sensors (FieldNode and others), plus software that ties live data to each project's build123d model so it can be seen and compared with the design calculations.
+problem: >-
+  Digital twins are sold as enterprise software, out of reach for small builders and cities, yet the idea is simple: a model, live data and a comparison between them.
+budget_usd: 200
+difficulty: 3  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [digital-twins, open-hardware, cern-ohl-s]
