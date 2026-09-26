@@ -1,6 +1,7 @@
 # Card metadata consumed by https://designmolecule.com
 name: TwinKit
 slug: twinkit
+repo: BoujeeEnjinia1701/twinkit         # GitHub repository, shown on every drawing and render
 area: Digital Twins
 trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
 trl_target: 3
