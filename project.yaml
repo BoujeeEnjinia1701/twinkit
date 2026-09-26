@@ -9,6 +9,7 @@ trl_evidence:
   - docs/02-concept.md
   - docs/03-requirements.md
   - docs/decisions/0001-trl2-review-decisions.md
+  - docs/decisions/0002-recommendations-accepted.md
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py
@@ -22,7 +23,7 @@ pitch: >-
   An open digital twin starter kit: a small edge gateway that collects readings from lab sensors (FieldNode and others), plus software that ties live data to each project's build123d model so it can be seen and compared with the design calculations.
 problem: >-
   Digital twins are sold as enterprise software, out of reach for small builders and cities, yet the idea is simple: a model, live data and a comparison between them.
-budget_usd: 200
+budget_usd: 300
 difficulty: 3  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:

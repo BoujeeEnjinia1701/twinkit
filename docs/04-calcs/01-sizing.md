@@ -3,7 +3,7 @@ doc_id: TWK-CAL-001
 title: TwinKit sizing calculations
 project: TwinKit
 doc_type: Calculation
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,17 +13,21 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: First issue for TRL 3 (airtime and collisions, storage and card wear, latency, power and fuse, backup, enclosure and processor temperature, memory, rail, cost)
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002). R1 judged with adaptive data rate, R12 at light load with heavy jobs in cool hours, R14 against the $300 budget
 ---
 
 # TwinKit sizing calculations
 
-On paper, TwinKit meets twelve of its sixteen requirements (five by calculation, seven by design), has one at risk, misses two and has one that cannot be checked at TRL 3. R14 (cost) is not met: the priced BOM totals $290 against `budget_usd` of $200, although it fits the $300 budget recommended in the TRL 2 review, which awaits Amish. R1 (uplink loss) is not met by a small margin at SF9: if all 50 nodes report every 5 min at SF9, pure ALOHA collisions lose 1.02 % of uplinks against a 1 % target. R12 (no processor throttling at 40 °C) is at risk: at light load the processor stays 16 K below its throttle point, but a sustained full load would throttle. R13 (setup time) needs a timed trial. The calculations changed two parts of the TRL 2 concept: the input fuse rises from 2 A to 3.15 A time-delay, and the UPS module is specified with a buck-boost charger so that it can charge the 12.8 V pack from a 9 V to 12 V input. Several TRL 2 figures were corrected (see the last section). Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A2], is the line of that script's output that carries it.
+On paper, TwinKit meets fifteen of its sixteen requirements (eight by calculation, seven by design); R13 (setup time) cannot be checked at TRL 3 and needs a timed trial. This revision applies the decisions Amish made on 2026-09-25 (TWK-DDR-002), which changed three results from v0.1. R14 (cost) is now met: the priced BOM totals $290 against the $300 `budget_usd` (was $200, not met). R1 (uplink loss) is now judged with adaptive data rate required, which spreads nodes over SF7 to SF9 and loses 0.21 % of uplinks against 1 %; with every node forced to SF9 the loss would be 1.02 % (v0.1 reported R1 as not met on that case). R12 (no processor throttling at 40 °C) is now defined at the normal light load, where the processor stays 15.9 K below its assumed throttle point, with heavy jobs scheduled for cool hours (v0.1: at risk). The calculations changed two parts of the TRL 2 concept: the input fuse rises from 2 A to 3.15 A time-delay, and the UPS module is specified with a buck-boost charger so that it can charge the 12.8 V pack from a 9 V to 12 V input. Several TRL 2 figures were corrected (see the last section). Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A2], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They are not a substitute for electrical safety checks of the 12 V wiring and the LiFePO4 pack, or for a security audit of the gateway. See TWK-PRC-001, Safety.
 
 ## Scope and method
 
-The note checks every requirement in TWK-REQ-001 v0.3 against the design in TWK-PRC-001 v0.3, the decisions in TWK-DDR-001 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and derived dimensions, so the enclosure size, vent areas and rail length used here are the ones in the STEP files and in drawing TWK-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
+The note checks every requirement in TWK-REQ-001 v0.4 against the design in TWK-PRC-001 v0.4, the decisions in TWK-DDR-001 and TWK-DDR-002 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS` and derived dimensions, so the enclosure size, vent areas and rail length used here are the ones in the STEP files and in drawing TWK-DWG-001. It also reads `bom/bom.csv` and `budget_usd` in `project.yaml`. Run it from the repo root with `python docs/04-calcs/sizing.py`.
 
 The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte reading every 5 min, to one gateway on a bench or in an equipment room at up to 40 °C. FieldNode's default interval is 15 min (FND-PRC-001 v0.2), so the 5 min case is conservative for FieldNode fleets.
 
@@ -47,7 +51,7 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 - **Traffic.** 50 nodes at 5 min give 600 uplinks per hour, 75 per channel per hour [A1].
 - **Time on air.** A 33-byte frame takes 71.9 ms at SF7, 133.6 ms at SF8, 246.8 ms at SF9, 452.6 ms at SF10 and 1810.4 ms at SF12 [A2]. These agree with FieldNode's airtime table (FND-PRC-001 v0.2, Table 3).
 - **Loss.** With every node on one spreading factor, collisions lose 0.30 % at SF7, 0.56 % at SF8, 1.02 % at SF9, 1.87 % at SF10 and 7.27 % at SF12 [A2]. An even mix of SF7, SF8 and SF9 loses 0.21 % [A3]. At FieldNode's 15 min default every case up to SF10 stays under 1 % (0.34 % at SF9) [A2].
-- **Verdict.** R1 is not met by a small margin in its worst stated case (all 50 nodes at SF9 and 5 min). The largest fleet that stays under 1 % in that case is 48 nodes [A5]. Adaptive data rate, which moves near nodes to faster spreading factors, or a 15 min interval both meet the target.
+- **Verdict.** R1, as restated in TWK-REQ-001 v0.4, requires adaptive data rate so that each node uses the fastest spreading factor its link allows. For an even SF7 to SF9 mix the loss is 0.21 % against 1 % [A6], so R1 is met. For information: if all 50 nodes were forced to SF9 at 5 min the loss would be 1.02 %, and the largest fleet under 1 % in that case is 48 nodes [A5]. FieldNode's 15 min default keeps every case up to SF10 under 1 % [A2].
 - **Regulatory duty cycle.** At SF9 and 5 min each node uses 0.08 % of air time, well inside the 1 % EU868 sub-band limit [A4]. The Things Network's 30 s per day fair-use limit does not apply on a private TwinKit gateway, but a node at SF9 and 5 min would exceed it (71 s per day) if moved to that public network [A2].
 
 ## B. Storage and card wear (R3, R7)
@@ -79,7 +83,7 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 - **Geometry.** The 157.5 x 90 x 60 mm enclosure exposes 0.0439 m². Two slot rows at each end give 640 mm² of low and of high vent, 42 mm apart vertically in the bench case. It holds 5.5 W at light load and 9.5 W at full load [F1].
 - **Light load.** Vented, the enclosure air rises 19.1 K to 59.1 °C at 40 °C ambient and the processor reaches 69.1 °C, 15.9 K below throttling. Sealed, the air rises 25.1 K and the processor reaches 75.1 °C [F2].
 - **Full load.** Sustained full load raises the processor to 96.9 °C vented and 109.3 °C sealed, so it would throttle [F2]. At the more typical 8 W/m²K it still reaches 88.3 °C [F3]. Doubling the vent area only brings it to 91.1 °C [F5].
-- **Verdict.** R12 is at risk. The normal load (0.17 uplinks per second [G3]) is light, and short bursts are damped by the thermal mass of the cooler and the air, but a sustained heavy job such as a full database recompression or a dashboard rebuild at 40 °C would throttle. The thermal resistance and throttle point are assumptions to be measured. The software should schedule heavy jobs for cool hours, and a larger or metal enclosure is the hardware fallback.
+- **Verdict.** R12, as restated in TWK-REQ-001 v0.4, applies at the normal light load (0.17 uplinks per second [G3]), with heavy jobs such as a full database recompression or backup scheduled for cool hours. In that case the processor reaches 69.1 °C, 15.9 K below the assumed throttle point [F6], so R12 is met on paper. A sustained heavy job at 40 °C would still throttle (96.9 °C), which is why the schedule rule is part of the design. The thermal resistance and throttle point are assumptions to be measured at TRL 4 (on hold); a larger or metal enclosure remains the hardware fallback if tests show throttling.
 - **Pack.** The LiFePO4 pack sits in the separate UPS module with only the charger's 0.81 W of loss while charging [E3], so it stays within a few kelvin of ambient and inside the usual 45 °C charge limit at 40 °C. A sealed street cabinet in sun (CityTwin) is a different case and is not covered here.
 
 ## G. Memory
@@ -95,7 +99,7 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 ## I. Cost (R14)
 
 - **Total.** All 16 BOM lines are priced; the total is $290.00: computer, cooler and card $85, radio and antenna $92, power and backup $85, enclosure, rail and plate $28 [I1].
-- **Against budget.** The total exceeds `budget_usd` ($200) by $90.00. Against the $300 recommended in the TRL 2 review, which awaits Amish, it leaves $10.00 [I2]. R14 is not met against the current budget. No custom PCB is used.
+- **Against budget.** Amish raised `budget_usd` from $200 to $300 on 2026-09-25 (TWK-DDR-002). The total is $10.00 within it; the earlier $200 budget would have been exceeded by $90.00 [I2]. R14 is met. No custom PCB is used. The margin is small, and prices are indicative, not supplier quotes.
 
 ## J. Results against every requirement
 
@@ -103,7 +107,7 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 
 | ID | Requirement | Value | Target | Status |
 | --- | --- | --- | --- | --- |
-| R1 | Receive readings | 0.30 % (SF7), 0.56 % (SF8), 1.02 % (SF9) loss, all nodes on one SF; 0.21 % for a mix | Under 1 % at SF7 to SF9, 50 nodes at 5 min | **Not met** at SF9 (marginal) |
+| R1 | Receive readings | 0.21 % loss with adaptive data rate (SF7 to SF9 mix); 1.02 % if all forced to SF9 | Under 1 %, 50 nodes at 5 min, adaptive data rate | Met |
 | R2 | Common inputs | LoRaWAN concentrator, MQTT, HTTP | LoRaWAN, MQTT, HTTP | Met by design |
 | R3 | Store history | 4.73 GB per year uncompressed on 56 GB free | 1 year | Met |
 | R4 | Link data to model | Twin file schema, TWK-PRC-001 | Every channel mapped to a part and an expected value | Met by design |
@@ -114,13 +118,13 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 | R9 | Ride through outages | 2.40 h new, 1.63 h worst | 30 min and clean shutdown | Met |
 | R10 | Compact mounting | 294 mm, 16.8 modules | 350 mm, 20 modules | Met |
 | R11 | Secure by default | First-boot credentials, TLS, no WAN ports | As stated | Met by design |
-| R12 | Operate at 0 to 40 °C | Processor 69.1 °C light load, 96.9 °C sustained full load | No throttling (85 °C assumed) | **At risk** |
+| R12 | Operate at 0 to 40 °C | Processor 69.1 °C at light load; heavy jobs in cool hours (96.9 °C if run at 40 °C) | No throttling at light load (85 °C assumed) | Met |
 | R13 | Quick setup | Not calculable | 60 min | Not verifiable at TRL 3 |
-| R14 | Low cost | $290.00 | $200 ($300 recommended, awaiting Amish) | **Not met** |
+| R14 | Low cost | $290.00 | $300 (raised from $200, TWK-DDR-002) | Met |
 | R15 | Open and exportable | Open-source stack, CSV and API | As stated | Met by design |
 | R16 | Monitoring only | No control outputs | As stated | Met by design |
 
-Summary: 2 not met, 1 at risk, 5 met by calculation, 7 met by design, 1 not verifiable at TRL 3.
+Summary: 0 not met, 0 at risk, 8 met by calculation, 7 met by design, 1 not verifiable at TRL 3 (R13). In v0.1: 2 not met (R1, R14), 1 at risk (R12).
 
 ## Checks against the TRL 2 figures
 

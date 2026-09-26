@@ -3,7 +3,7 @@ doc_id: TWK-PRB-001
 title: TwinKit problem statement
 project: TwinKit
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record TRL 2 review items adopted for TRL 3 (TWK-DDR-001) and the items still open
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002). Budget constraint raised to $300; open questions closed except the co-design partner
 ---
 
 # TwinKit problem statement
@@ -59,7 +63,7 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 
 ## Constraints
 
-- Garage-buildable prototype, about $200 USD in parts, from off-the-shelf modules with no custom PCB.
+- Garage-buildable prototype, $300 USD or less in parts (raised from $200 by Amish on 2026-09-25, TWK-DDR-002), from off-the-shelf modules with no custom PCB.
 - Runs on one gateway with no internet connection and no vendor cloud account.
 - Open licenses throughout: hardware CERN-OHL-S-2.0, TwinKit code MIT, and open-source third-party software.
 - Low voltage only (12 V DC input).
@@ -75,7 +79,7 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 
 ## Open questions
 
-- First example twin: FieldNode (battery state of charge against its power-budget calculation), adopted for TRL 3 pending Amish's review (TWK-DDR-001).
-- Radio: a full LoRaWAN concentrator rather than a point-to-point LoRa receiver, adopted for TRL 3 pending Amish's review (TWK-DDR-001).
-- Budget: the parts cost is $290 (TWK-CAL-001) against the $200 constraint above; raising `budget_usd` to $300 is recommended and remains proposed, awaiting Amish.
+- First example twin: FieldNode (battery state of charge against its power-budget calculation). Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
+- Radio: a full LoRaWAN concentrator rather than a point-to-point LoRa receiver. Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
+- Budget: the parts cost is $290 (TWK-CAL-001). Decided by Amish, 2026-09-25: go with recommendation, `budget_usd` raised from $200 to $300 (TWK-DDR-002).
 - Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? No recommendation; proposed, awaiting Amish.

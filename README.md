@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Digital Twins · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $200 USD · **Difficulty:** 3 of 5
+**Area:** Digital Twins · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $300 USD · **Difficulty:** 3 of 5
 
 An open digital twin starter kit: a small edge gateway that collects readings from lab sensors (FieldNode and others), plus software that ties live data to each project's build123d model so it can be seen and compared with the design calculations.
 
@@ -48,7 +48,7 @@ Digital twin platforms are priced for large firms, yet small and medium enterpri
 
 ## What sparked the idea
 
-It came out of a September 2026 review of Design Molecule's applied research areas against the open projects already in the lab. Digital twins are a Design Molecule research area with no open project yet. The trigger was practical: the lab's projects each publish a build123d model and design calculations, and sensor projects such as FieldNode and WaterWatch are about to produce live data, with nothing to connect the two.
+The idea traces back to Apollo 13 in April 1970. After an oxygen tank failed, the procedures to bring the crippled command module back to life were worked out on the ground against a model of the spacecraft: NASA's history notes that Ken Mattingly "had spent hours in the CM simulator finalizing the procedures" before the crew ran them ([NASA, 2020](https://www.nasa.gov/history/50-years-ago-apollo-13-crew-returns-safely-to-earth/)). That pairing of a model with the state of the real system, later formalized as the digital twin ([Grieves and Vickers, 2017](https://link.springer.com/chapter/10.1007/978-3-319-38756-7_4)), then needed a room of simulators and a mission control center. TwinKit asks whether the same loop of model, live readings and comparison can run on one DIN rail gateway for a small device, using the model and calculations each project already has.
 
 ## Problem
 
@@ -56,7 +56,7 @@ Digital twins are sold as enterprise software, out of reach for small builders a
 
 ## Concept
 
-A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. TRL 3 calculations ([TWK-CAL-001](docs/04-calcs/01-sizing.md)): 50 nodes with 1.02 % uplink loss if all use SF9 at 5 min (just over the 1 % target), 6.4 W average, 2.4 h of backup, 4.7 GB of data a year, and $290 in parts, above the $200 budget; a $300 budget is recommended and awaits Amish. Processor throttling at 40 °C under sustained full load is a risk.
+A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. TRL 3 calculations ([TWK-CAL-001](docs/04-calcs/01-sizing.md)): 50 nodes at 5 min with 0.21 % uplink loss using adaptive data rate (target under 1 %), 6.4 W average, 2.4 h of backup, 4.7 GB of data a year, and $290 in parts within the $300 budget. At 40 °C ambient the processor stays about 16 K below its assumed throttle point at normal load; heavy database jobs are scheduled for cool hours. Fifteen of sixteen requirements are met on paper; setup time needs a timed trial.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 

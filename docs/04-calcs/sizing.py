@@ -1,4 +1,4 @@
-"""TwinKit sizing calculations, TWK-CAL-001 v0.1 (TRL 3).
+"""TwinKit sizing calculations, TWK-CAL-001 v0.2 (TRL 3).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md. Each line carries a tag such as
@@ -110,9 +110,11 @@ n9 = 0
 while aloha_loss((n9 + 1) * 60 / INTERVAL_MIN / CHANNELS / 3600, airtime(9)) < 0.01:
     n9 += 1
 tag("A5", f"largest fleet under 1 % loss with every node at SF9 and 5 min: {n9} nodes")
-results["R1"] = ("Not met",
-                 f"{loss[7] * 100:.2f} % at SF7, {loss[8] * 100:.2f} % at SF8, {loss[9] * 100:.2f} % at SF9 with all 50 nodes on one SF (marginal); "
-                 f"{mix * 100:.2f} % for an even SF7 to SF9 mix")
+# R1 as restated by TWK-DDR-002: adaptive data rate is required, so nodes spread over SF7 to SF9 by link quality
+tag("A6", f"R1 design case with adaptive data rate (even SF7 to SF9 mix): {mix * 100:.2f} % against 1 %; "
+          f"all nodes forced to SF9 (information only): {loss[9] * 100:.2f} %")
+results["R1"] = ("Met" if mix < 0.01 else "Not met",
+                 f"{mix * 100:.2f} % with adaptive data rate (SF7 to SF9 mix); {loss[9] * 100:.2f} % if all 50 nodes were forced to SF9 (not the design case)")
 
 # ------------------------------------------------------------------ B. storage and card wear (R3, R7)
 vals = NODES * FIELDS * 24 * 60 / INTERVAL_MIN * 365
@@ -208,8 +210,12 @@ tag("F5", f"sensitivity, vent area doubled: full load air rise {rise(p_in_pk, H_
 a_eff = a_save
 tag("F4", f"TRL 2 estimate: {p_in:.1f} W over {A:.4f} m2 at h = 5 sealed gives {p_in / (5 * A):.1f} K (TRL 2 quoted about 20 K)")
 lt, fl = cases[("light", True)], cases[("full", True)]
-results["R12"] = ("At risk", f"vented: {lt[1]:.0f} C light load ({T_THROTTLE - lt[1]:.0f} K margin), {fl[1]:.0f} C sustained full load "
-                             f"({T_THROTTLE - fl[1]:.0f} K); sealed light {cases[('light', False)][1]:.0f} C")
+# R12 as restated by TWK-DDR-002: no throttling at the normal light load; heavy jobs are scheduled for cool hours
+tag("F6", f"R12 design case (light load, vented, 40 C): processor {lt[1]:.1f} C, margin {T_THROTTLE - lt[1]:.1f} K; "
+          f"heavy jobs moved to cool hours (full load at 40 C would reach {fl[1]:.1f} C)")
+results["R12"] = ("Met" if lt[1] < T_THROTTLE else "Not met",
+                  f"vented: {lt[1]:.0f} C at light load ({T_THROTTLE - lt[1]:.0f} K margin, assumed throttle point); heavy jobs in cool hours "
+                  f"(sustained full load at 40 C would reach {fl[1]:.0f} C)")
 
 # ------------------------------------------------------------------ G. memory
 mem = sum(MEM.values())
@@ -226,14 +232,14 @@ results["R10"] = ("Met", f"{D['rail_used_mm']:.0f} mm ({D['rail_used_modules']:.
 rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 total = sum(float(r["unit_cost_usd"]) * float(r["qty"]) for r in rows)
 budget = float(yaml.safe_load((ROOT / "project.yaml").read_text())["budget_usd"])
-REC_BUDGET = 300.0
 hw = {k: sum(float(r["unit_cost_usd"]) for r in rows if r["item"].split()[0] in ks)
       for k, ks in (("computer, cooler and card", ("5", "6", "8")), ("radio and antenna", ("7", "9")),
                     ("power and backup", ("10", "11", "12", "13")), ("enclosure, rail and plate", ("1", "2", "3", "4")))}
 tag("I1", f"{len(rows)} BOM lines, all priced; total ${total:.2f}: " + ", ".join(f"{k} ${v:.0f}" for k, v in hw.items()))
-tag("I2", f"against budget_usd ${budget:.0f}: over by ${total - budget:.2f}; against the recommended ${REC_BUDGET:.0f} "
-          f"(awaiting Amish): ${REC_BUDGET - total:.2f} left")
-results["R14"] = ("Not met", f"${total:.0f} against ${budget:.0f} (met against the ${REC_BUDGET:.0f} awaiting Amish); no custom PCB")
+TRL2_BUDGET = 200.0
+tag("I2", f"against budget_usd ${budget:.0f}: {'within by' if total <= budget else 'over by'} ${abs(budget - total):.2f} "
+          f"(the earlier ${TRL2_BUDGET:.0f} budget would be exceeded by ${total - TRL2_BUDGET:.2f})")
+results["R14"] = ("Met" if total <= budget else "Not met", f"${total:.0f} against ${budget:.0f}; no custom PCB")
 
 # ------------------------------------------------------------------ J. summary
 by_design = {"R2": "Concentrator for LoRaWAN; MQTT and HTTP on Ethernet or Wi-Fi",

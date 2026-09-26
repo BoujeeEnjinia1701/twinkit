@@ -36,11 +36,11 @@ context = [Part("Desk", desk, "#D6D9DE"), Part("14-inch laptop", lap_base + lap_
 
 render_all(
     parts, project="TwinKit", title="Edge gateway concept", dwg_no="TWK-DWG-010",
-    key_figures=["50 nodes at 1 reading per 5 min; 1.02 % loss at SF9 (TWK-CAL-001)",
+    key_figures=["50 nodes at 1 reading per 5 min; 0.21 % loss with ADR (TWK-CAL-001)",
                  "6.4 W average at 12 V; 20.6 W peak; 3.15 A T fuse",
                  "2.4 h backup on a 12.8 V, 1.5 Ah LiFePO4 pack",
                  "4.7 GB per year for 50 nodes, uncompressed",
-                 "$290 in parts vs $200 budget ($300 awaiting Amish)",
+                 "$290 in parts within the $300 budget",
                  "Works offline; no vendor cloud account"],
     scale_figure=False, context=context,
     cut_exclude=("LoRa antenna and SMA bulkhead", "Bench mounting plate"),
