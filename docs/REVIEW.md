@@ -166,3 +166,10 @@ R12 and R14 are met on thin evidence: R12 on an assumed thermal resistance and t
 ### TRL 4
 
 TRL 4 remains on hold by Amish's instruction. Decided work that needs TRL 4 (timed setup trial for R13, thermal test to confirm R12, packet-loss test with adaptive data rate, supplier quotes for R14, and the larger or metal enclosure fallback) is recorded as decided but on hold. `trl` and `trl_target` stay at 3.
+
+## Session 2026-09-26: photoreal renders
+
+Amish asked on 2026-09-26 for photoreal renders across the portfolio, starting with the software and playbook repos (Group C). This repo has no new product model: the existing concept scene from `cad/src/concept_media.py` was rendered with Blender Cycles (`.kit/scene_export.py`, `.kit/photoreal.py`) on Amish's Mac and captioned with the project, repository and viewing direction.
+
+- New: `media/render-hero.png`, `media/render-detail.png`. The README now leads with `media/render-hero.png`.
+- Geometry, BOM, calculations and drawings are unchanged. `trl` stays 3; TRL 4 remains on hold.
