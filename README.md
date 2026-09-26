@@ -1,14 +1,14 @@
 # TwinKit
 
-![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Digital Twins · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $200 USD · **Difficulty:** 3 of 5
+**Area:** Digital Twins · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $200 USD · **Difficulty:** 3 of 5
 
 An open digital twin starter kit: a small edge gateway that collects readings from lab sensors (FieldNode and others), plus software that ties live data to each project's build123d model so it can be seen and compared with the design calculations.
 
 ![TwinKit concept](media/hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/TWK-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -56,7 +56,7 @@ Digital twins are sold as enterprise software, out of reach for small builders a
 
 ## Concept
 
-A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. First-order estimates: 50 nodes, about 6 W, about 2 h of backup and about $285 in parts, above the $200 budget (see the review note).
+A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. TRL 3 calculations ([TWK-CAL-001](docs/04-calcs/01-sizing.md)): 50 nodes with 1.02 % uplink loss if all use SF9 at 5 min (just over the 1 % target), 6.4 W average, 2.4 h of backup, 4.7 GB of data a year, and $290 in parts, above the $200 budget; a $300 budget is recommended and awaits Amish. Processor throttling at 40 °C under sustained full load is a risk.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
@@ -64,12 +64,12 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 - Single-board computer (4 GB) in a vented 9-module DIN rail enclosure
 - 8-channel LoRaWAN concentrator HAT and antenna (Wi-Fi and Ethernet built in; cellular optional)
-- 12 V DC input with DC-DC converter, DIN UPS module and 12.8 V LiFePO4 backup pack
-- Open-source network server, MQTT broker, time-series database and dashboard
+- 12 V DC input (9 to 30 V) with 3.15 A time-delay fuse, DC-DC converter, DIN UPS module with buck-boost charger and 12.8 V LiFePO4 backup pack
+- Open-source network server, MQTT broker, TimescaleDB and dashboard
 - TwinKit twin service and model-to-data mapping schema
-- Example twin of one lab project (FieldNode proposed)
+- Example twin of FieldNode's battery and solar charge
 
-The working bill of materials is in [bom/bom.csv](bom/bom.csv).
+The priced bill of materials is in [bom/bom.csv](bom/bom.csv). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP and STL exports in `cad/step/` and `cad/stl/`.
 
 ## Safety
 

@@ -3,7 +3,7 @@ doc_id: TWK-PRB-001
 title: TwinKit problem statement
 project: TwinKit
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (users, context, constraints, prior work)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Record TRL 2 review items adopted for TRL 3 (TWK-DDR-001) and the items still open
 ---
 
 # TwinKit problem statement
@@ -71,6 +75,7 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 
 ## Open questions
 
-- Which lab project should be the first example twin? Proposed: FieldNode (battery state of charge against its power-budget calculation), awaiting Amish.
-- Full LoRaWAN concentrator or a lower-cost point-to-point LoRa receiver? See REVIEW.md, awaiting Amish.
-- Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? Proposed, awaiting Amish.
+- First example twin: FieldNode (battery state of charge against its power-budget calculation), adopted for TRL 3 pending Amish's review (TWK-DDR-001).
+- Radio: a full LoRaWAN concentrator rather than a point-to-point LoRa receiver, adopted for TRL 3 pending Amish's review (TWK-DDR-001).
+- Budget: the parts cost is $290 (TWK-CAL-001) against the $200 constraint above; raising `budget_usd` to $300 is recommended and remains proposed, awaiting Amish.
+- Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? No recommendation; proposed, awaiting Amish.

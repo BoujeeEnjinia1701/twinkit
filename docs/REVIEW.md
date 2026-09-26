@@ -56,3 +56,71 @@ Requirements not met or not shown: R14 (cost, about $285 against $200), R12 (the
 ### Recommended next step
 
 Review this note and the media, and decide the budget and radio questions first, since both change the BOM. If approved, run `/advance-trl3` to write the calculation note (airtime and loss, storage and card wear, power and backup, enclosure thermal check), a working build123d model with STEP export, a drawing sheet and a fully priced BOM.
+
+## Session 2026-09-25: TRL 3
+
+On 2026-09-25 Amish asked for this batch of repos to be taken through the usual process with the instruction "you know the drill, nothing gets past TRL 3". He has not reviewed this repo's TRL 2 items one by one. This session ran `/advance-trl3` on that instruction and stopped at TRL 3.
+
+### What was done
+
+- `docs/decisions/0001-trl2-review-decisions.md` (TWK-DDR-001 v0.1, status proposed): seven recommendations adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (D1 to D7), and two items left open (O1 budget, O2 co-design partner).
+- `docs/04-calcs/01-sizing.md` (TWK-CAL-001 v0.1) and `docs/04-calcs/sizing.py`: LoRa airtime and ALOHA collision loss, storage and card wear, latency and flag timing, power, peak current and fuse, backup, enclosure and processor temperature, memory, rail length and cost, with a status for every requirement. The script imports the model's parameters and reads the BOM and `project.yaml`; every number in the note is printed by it with a tag.
+- `cad/src/model.py`: parametric build123d model (plate, TS35 rail, 9-module enclosure base and cover with end vents, board, cooler, concentrator HAT, card, antenna on a bulkhead, DC-DC converter, UPS module with pack, terminals and fuse). Exports `cad/step/` and `cad/stl/` for `twinkit-assembly` and `gateway-enclosure`.
+- `cad/src/sheets.py` and `cad/drawings/TWK-DWG-001.svg`, `.pdf`, `.png`: general arrangement at Rev P1, 1:5, marked "CONCEPT, NOT FOR FABRICATION" and "PRELIMINARY, NOT FOR FABRICATION". TWK-DWG-001 was free because the concept blueprint is TWK-DWG-010.
+- `bom/bom.csv` (16 lines, all priced with a supplier type, $290.00) and `bom/bom-notes.md`.
+- `cad/src/concept_media.py` now builds from the model; all of `media/` was re-rendered and every image checked. The kit's default cutaway works for this model because it is centered near the origin; no workaround was needed. Temporary `media/_views*` folders were removed.
+- TWK-PRB-001, TWK-PRC-001 and TWK-REQ-001 revised to v0.3; `README.md` (TRL badge, concept numbers, components, links) and `project.yaml` (`trl: 3`, `trl_target: 3`, evidence list) updated. PDFs rebuilt in `docs/pdf/`.
+
+Design changes found necessary by the calculations, within the adopted choices: the input fuse rises from 2 A to 3.15 A time-delay (peak 2.29 A at 9 V), and the UPS module must have a buck-boost charger to charge the 12.8 V pack to 14.6 V from a 9 to 12 V input ($25 to $30). Batched database commits every 10 s are adopted in the twin service design to limit card wear.
+
+### Requirement status (TWK-CAL-001, Table 2)
+
+2 not met, 1 at risk, 5 met by calculation, 7 met by design, 1 not verifiable at TRL 3.
+
+| ID | Status | Key number |
+| --- | --- | --- |
+| R1 Uplink loss | **Not met** (marginal) | 1.02 % at SF9 with all 50 nodes at 5 min (target under 1 %); 0.30 % at SF7, 0.56 % at SF8, 0.21 % for an SF7 to SF9 mix; 48 nodes meet it at SF9. The TRL 2 "met" claim rested on a low airtime figure |
+| R14 Cost | **Not met** | $290.00 against $200 `budget_usd`; $10 within the recommended $300, awaiting Amish |
+| R12 Thermal | At risk | Processor 69.1 °C at light load (15.9 K margin), 96.9 °C at sustained full load, vented, at 40 °C ambient; throttle point and thermal resistance assumed |
+| R13 Setup time | Not verifiable at TRL 3 | Needs a timed trial |
+| R3, R5, R8, R9, R10 | Met by calculation | 4.73 GB/yr on 56 GB free; 4.7 s worst latency; 6.41 W average; 2.40 h backup (1.63 h worst); 294 mm of rail |
+| R2, R4, R6, R7, R11, R15, R16 | Met by design | R6 frame rate on a phone not verifiable at TRL 3; 7-day buffer 91 MB |
+
+Key numbers: airtime 71.9 ms (SF7) to 1810.4 ms (SF12) for a 20-byte reading; 20.6 W peak input; 2.42 GB of 4 GB memory in use; card writes 35 to 53 GB a year.
+
+### Decisions recorded (TWK-DDR-001)
+
+Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: D1 8-channel LoRaWAN concentrator; D2 4 GB Pi 5 class board; D3 TimescaleDB; D4 lightweight stack plus a TwinKit service; D5 FieldNode battery and solar charge as the first example twin; D6 the YAML twin file fields sketched in the precis; D7 off-the-shelf LiFePO4 pack with built-in BMS. No reworded pitch or problem line was recommended, so `project.yaml` and `README.md` keep the existing wording.
+
+### Still awaiting Amish
+
+1. **O1, budget.** Recommended: raise `budget_usd` from $200 to $300. Not applied; `budget_usd` stays $200. The design ($290) is costed for the recommended option, since D1 keeps LoRaWAN.
+2. **O2, co-design partner** outside the lab. No recommendation was made. Proposed, awaiting Amish.
+3. **New, R1 at SF9.** Options: (a) keep the target and require adaptive data rate so near nodes use SF7 or SF8 (0.21 % for an even mix); (b) state the design point as 48 nodes at SF9 and 5 min, or 50 nodes at FieldNode's 15 min default (0.34 %); (c) relax the target to 1.5 %. Recommendation: (a), since it needs no hardware change. Not applied.
+4. **New, R12 load profile.** Recommendation: define R12 at the normal light load and require heavy database jobs to run in cool hours, with a larger or metal enclosure as the fallback if tests show throttling. Not applied.
+
+### Cross-repo consistency
+
+- FieldNode (FND REVIEW): LoRaWAN radio, STM32WL-class module, 20-byte payload, 15 min default interval, TwinKit as the default gateway. TwinKit's airtime figures now match FieldNode's Table 3 (72 ms at SF7, 247 ms at SF9, 1.8 s at SF12). TwinKit is sized for 5 min, which is conservative. No conflict. Note: a FieldNode at SF9 and 5 min would exceed The Things Network's 30 s fair-use limit if moved to that public network; on a private TwinKit gateway only the EU868 1 % duty cycle applies (0.08 % used).
+- CellGuard: not used at this size (D7); no interface assumed.
+- CalRig: calibration records could set channel tolerances later; no interface assumed at TRL 3.
+- CityTwin (not in the shared set, but it depends on TwinKit): its review recommends costing the gateway in TwinKit, which matches O1. Its sealed street cabinet in sun is hotter than the 40 °C case here, so R12 and the pack temperature need a separate check there.
+
+### Safety concerns
+
+- LiFePO4 pack: built-in BMS and fuse; charge only through the UPS module; the buck-boost charger must be set for LiFePO4 (14.6 V) and must not charge below 0 °C or above 45 °C.
+- Input protection: the 3.15 A time-delay fuse sits at the supply input; wire sized for at least 3 A.
+- 12 V supply: certified mains adapter; any cabinet or mains-side wiring by a qualified electrician.
+- Thermal: a sealed or sun-exposed enclosure at 40 °C can drive the processor past its throttle point under heavy load; this is a reliability risk rather than a fire risk at these powers.
+- Cybersecurity and over-reliance: default credentials, open ports and unpatched software remain the main real-world risk; the twin is a monitoring aid and does not replace required alarms or protection.
+
+### Gaps and notes
+
+- Prices are indicative, not supplier quotes. A WebFetch check of the Raspberry Pi 5 price was not approved in time, and a supplier page for a concentrator module returned a clearance price that did not look representative, so no price was changed on web evidence. No citations were flagged as unchecked in the TRL 2 note; none were added.
+- Assumptions that only tests can settle: processor thermal resistance and throttle point, board and concentrator power, card write amplification and endurance, and the latency of each software stage.
+- The GA sheet is at 1:5 because the antenna sets the height; the views are small but legible.
+- Existing material beyond TRL 3: `build-log/README.md` (scaffold) is present, untouched and not extended. `firmware/` and `electronics/` hold only placeholders. No test, build or firmware material was created.
+
+### Recommended next step
+
+TRL 4 is on hold by Amish's instruction; this repo stops at TRL 3. Amish's review is needed on the budget (O1), the co-design partner (O2), and the new R1 and R12 proposals above. For the record only, TRL 4 would need: a bench build of the gateway; a lab test report (TST, `environment: lab`) covering packet loss with real FieldNodes at several spreading factors, measured power and backup time, processor temperature at 40 °C under light and heavy load, database size and card writes over a sustained run, and a timed setup trial for R13; and build log entries. None of this has been started.

@@ -3,15 +3,15 @@ item,qty,spec,supplier,unit_cost_usd,make_buy,notes
 2 DIN rail,1,"TS35 x 7.5 mm, cut to about 320 mm",Electrical wholesaler,4.00,buy,Indicative price
 3 Gateway enclosure base,1,"9-module DIN rail enclosure for a single-board computer, polycarbonate, vented",Electrical or electronics distributor,18.00,buy,Indicative price for base and cover together
 4 Gateway enclosure cover,1,"Clear or tinted cover with SMA bulkhead hole, supplied with line 3",Electrical or electronics distributor,0.00,buy,Included in line 3
-5 Single-board computer,1,"Quad-core Arm SBC with 4 GB RAM, Ethernet, Wi-Fi, 40-pin header (Raspberry Pi 5 class)",Authorized reseller,65.00,buy,Indicative price; proposed choice awaiting Amish
+5 Single-board computer,1,"Quad-core Arm SBC with 4 GB RAM, Ethernet, Wi-Fi, 40-pin header (Raspberry Pi 5 class)",Authorized reseller,65.00,buy,"Indicative price; adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
 6 Active cooler,1,Clip-on heat sink and fan for line 5,Authorized reseller,5.00,buy,Indicative price
-7 LoRaWAN concentrator HAT,1,"SX1302 or SX1303 8-channel concentrator on a 40-pin HAT, EU868 or US915 version to suit region",Electronics distributor,80.00,buy,Indicative price; proposed choice awaiting Amish
-8 microSD card,1,"64 GB high-endurance, A2 class",Electronics retailer,15.00,buy,Indicative price; SSD upgrade listed in REVIEW.md
+7 LoRaWAN concentrator HAT,1,"SX1302 or SX1303 8-channel concentrator on a 40-pin HAT, EU868 or US915 version to suit region",Electronics distributor,80.00,buy,"Indicative price; SX1302 or SX1303 class; adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
+8 microSD card,1,"64 GB high-endurance, A2 class",Electronics retailer,15.00,buy,Indicative price; write load and wear in TWK-CAL-001 section B
 9 LoRa antenna and SMA bulkhead,1,"3 dBi whip for the chosen band, SMA bulkhead with U.FL pigtail",Electronics distributor,12.00,buy,Indicative price
 10 DC-DC converter,1,"DIN rail, 9 to 30 V in, 5.1 V 5 A out",Electrical or electronics distributor,18.00,buy,Indicative price
-11 DIN UPS module,1,"12 V DC UPS and LiFePO4 charger, power-fail signal output",Electrical or electronics distributor,25.00,buy,Indicative price; proposed choice awaiting Amish
-12 LiFePO4 backup pack,1,"12.8 V 1.5 Ah (19.2 Wh) with built-in BMS and fuse",Battery supplier,25.00,buy,Indicative price
-13 Terminal blocks and fuse,1,"DIN terminal blocks, 2 A fuse holder and fuse, wire, cable glands",Electrical wholesaler,12.00,buy,Indicative price
-14 Open-source software stack,1,"LoRaWAN network server, MQTT broker, time-series database, dashboard",Open source,0.00,make,No license cost; see docs/02-concept.md
-15 TwinKit twin service and mapping schema,1,"Python service and YAML schema linking sensor channels to model parts and calculations",Self,0.00,make,To be written under MIT license
-16 Example twin of FieldNode,1,"Mapping file, expected-value curves and dashboard for one FieldNode",Self,0.00,make,Example project proposed, awaiting Amish
+11 DIN UPS module,1,"DIN rail DC UPS for a 12.8 V LiFePO4 pack: 9 to 30 V input, buck-boost CC/CV charger to 14.6 V at 0.5 A or less, pass-through output, power-fail signal output",Electrical or electronics distributor,30.00,buy,Indicative price; module on a DIN carrier if no DIN version is found; charger must boost from a 9 to 12 V input (TWK-CAL-001 section D)
+12 LiFePO4 backup pack,1,12.8 V 1.5 Ah (19.2 Wh) with built-in BMS and fuse,Battery supplier,25.00,buy,"Indicative price; off-the-shelf pack with built-in BMS, adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
+13 Terminal blocks and fuse,1,"DIN terminal blocks, fuse holder with 3.15 A time-delay (T) 5 x 20 mm fuse, wire, cable glands",Electrical wholesaler,12.00,buy,Indicative price; fuse raised from 2 A to 3.15 A T by TWK-CAL-001 section D
+14 Open-source software stack,1,"LoRaWAN network server, MQTT broker, TimescaleDB time-series database, dashboard",Open source,0.00,make,"No license cost; stack adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
+15 TwinKit twin service and mapping schema,1,Python service and YAML schema linking sensor channels to model parts and calculations,Self,0.00,make,"To be written under MIT license; schema fields adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
+16 Example twin of FieldNode,1,"Mapping file, expected-value curves and dashboard for one FieldNode",Self,0.00,make,"FieldNode battery and solar charge; adopted for TRL 3 per TWK-DDR-001, open for Amish's review"
