@@ -47,12 +47,12 @@ def safe_project_views(part, workdir, line_weight=0.35):
 def ortho_cells(sheet, views, names=("front", "top", "right")):
     """Repeat Sheet.add_ortho's layout arithmetic to find where each view lands (x, y, w, h)."""
     ax, ay, aw, ah = M + 10, M + 16, 245, TB_Y - M - 20
-    gap, lab = 14, 12
+    gap, lab, dl = 14, 12, 11
     dims = {n: _viewbox(Path(views[n]).read_text())[2:] for n in names}
     fw, fh = dims["front"]; tw, th = dims["top"]; rw, rh = dims["right"]
     k = sheet.scale
-    ax += (aw - (k * (max(fw, tw) + rw) + gap)) / 2
-    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab)) / 2
+    ax += (aw - (k * (max(fw, tw) + rw) + gap + dl)) / 2 + dl
+    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab + dl)) / 2 + dl
     colw = k * max(fw, tw)
     front_y = ay + k * th + lab + gap
     row_h = k * max(fh, rh)
@@ -93,10 +93,11 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work)
     bb = asm.bounding_box()
-    s = Sheet(project="TwinKit", title="General arrangement, edge gateway", dwg_no="TWK-DWG-001", rev="P1",
+    s = Sheet(project="TwinKit", title="General arrangement, edge gateway", dwg_no="TWK-DWG-001", rev="P2",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Bought-in DIN modules per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
+                         ("P2", "Layout and labels tidied", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -114,25 +115,23 @@ def main():
                                      (D["antenna_top_z"], f"{D['antenna_top_z']:.0f} ANTENNA TIP"))):
         xd = xr + 7 * i
         L.append(ext(X(xg + ew / 2 if i == 0 else xg - 30), Z(zz), xd + 1, Z(zz)))
-        L += dim_v(xd, Z(zz), Z(0), label, side=1)
+        L += dim_v(xd, Z(zz), Z(0), label, side=3)
     L.append(ext(X(D["x_ups"] + P["ups_modules"] * P["module"] / 2), Z(0), xr + 8, Z(0)))
-    L += leader(X(xg - 30), Z(D["antenna_top_z"] - 60), X(xg - 30) - 8, Z(D["antenna_top_z"] - 40), "9 ANTENNA, SMA BULKHEAD", "end")
+    L += leader(X(xg - 30), Z(D["antenna_top_z"] - 60), X(xg - 30) + 8, Z(D["antenna_top_z"] - 40), "9 ANTENNA, SMA BULKHEAD")
     L += leader(X(xg + ew / 2 - 1), Z(zr + P["vent_z_high"]), X(xg + ew / 2) + 6, Z(zr + P["vent_z_high"] + 70), "VENTS BOTH ENDS")
-    L.append(_t(X(bb.min.X) + 2, Z(0) + 5, "PLATE TOP Z = 0", 1.9, 400, MUTED))
+    L.append(_t(X(bb.max.X), Z(0) + 4, "PLATE TOP Z = 0", 1.9, 400, MUTED, "end"))
 
     # top view (from +Z): X right, Y up
     x, y, w, h = c["top"]
     Xt = lambda mx: x + (mx - bb.min.X) * k
     Yt = lambda my: y + h - (my - bb.min.Y) * k
-    ya = Yt(bb.max.Y) - 5
+    ya = Yt(bb.max.Y) - 12
     L += [ext(Xt(D["rail_left"]), Yt(ed / 2), Xt(D["rail_left"]), ya - 1),
           ext(Xt(D["rail_right"]), Yt(ed / 2), Xt(D["rail_right"]), ya - 1)]
     L += dim_h(Xt(D["rail_left"]), Xt(D["rail_right"]), ya, f"{D['rail_used_mm']:.0f} RAIL USED ({D['rail_used_modules']:.1f} MODULES)")
     yb = ya - 7
     L += [ext(Xt(xg - ew / 2), Yt(ed / 2), Xt(xg - ew / 2), yb - 1), ext(Xt(xg + ew / 2), Yt(ed / 2), Xt(xg + ew / 2), yb - 1)]
     L += dim_h(Xt(xg - ew / 2), Xt(xg + ew / 2), yb, f"{ew:.1f} (9 MODULES)")
-    L += [ext(Xt(bb.min.X), Yt(bb.max.Y), Xt(bb.min.X), yb - 8), ext(Xt(bb.max.X), Yt(bb.max.Y), Xt(bb.max.X), yb - 8)]
-    L += dim_h(Xt(bb.min.X), Xt(bb.max.X), yb - 7, f"{P['plate'][0]:.0f} PLATE")
 
     # right view (from +X): Y right, Z up
     x, y, w, h = c["right"]
@@ -141,11 +140,9 @@ def main():
     zt = D["enc_top_z"] + 30
     L += [ext(Yr(-ed / 2), Zr(D["enc_top_z"]), Yr(-ed / 2), Zr(zt) - 1), ext(Yr(ed / 2), Zr(D["enc_top_z"]), Yr(ed / 2), Zr(zt) - 1)]
     L += dim_h(Yr(-ed / 2), Yr(ed / 2), Zr(zt), f"{ed:.0f}")
-    L += [ext(Yr(bb.min.Y), Zr(0), Yr(bb.min.Y), Zr(zt + 170) - 1), ext(Yr(bb.max.Y), Zr(0), Yr(bb.max.Y), Zr(zt + 170) - 1)]
-    L += dim_h(Yr(bb.min.Y), Yr(bb.max.Y), Zr(zt + 170), f"{P['plate'][1]:.0f} PLATE")
 
     s._layers += L
-    s.add_svg(views["iso"], 276, 32, 140, 100, label="Isometric view", sublabel="Not to scale")
+    s.add_svg(views["iso"], 276, 34, 140, 98, label="Isometric view", sublabel="Not to scale")
     m = P["module"]
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"TS35 x 7.5 rail, {P['rail'][0]:.0f} long; module pitch {m}",
@@ -157,7 +154,7 @@ def main():
         "Pack 12.8 V, 1.5 Ah LiFePO4 with BMS, inside the UPS module",
         f"Plate {P['plate'][0]:.0f} x {P['plate'][1]:.0f} x {P['plate'][2]:.0f}; omit in a cabinet",
         "Third-angle; front view from -Y; X along the rail",
-    ], x=276, y=158, width=146)
+    ], x=276, y=158, width=140)
     out = s.save(ROOT / "cad" / "drawings" / "TWK-DWG-001")
     shutil.rmtree(work, ignore_errors=True)
     print(f"wrote {out} and .pdf, .png at scale 1:{1 / k:g}")
