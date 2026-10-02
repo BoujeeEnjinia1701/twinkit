@@ -2,13 +2,13 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1388478135.svg)](https://zenodo.org/badge/latestdoi/1388478135) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/twinkit/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/twinkit/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/twinkit/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/twinkit)
 
-**Area:** Digital Twins · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $300 USD · **Difficulty:** 3 of 5
+**Area:** Digital Twins · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** about $300 USD · **Difficulty:** 3 of 5
 
 An open digital twin starter kit: a small edge gateway that collects readings from lab sensors (FieldNode and others), plus software that ties live data to each project's build123d model so it can be seen and compared with the design calculations.
 
 ![TwinKit: open digital twin starter kit and edge gateway, photoreal render](media/render-hero.png)
 
-[Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/TWK-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/TWK-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -56,7 +56,7 @@ Digital twins are sold as enterprise software, out of reach for small builders a
 
 ## Concept
 
-A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. TRL 3 calculations ([TWK-CAL-001](docs/04-calcs/01-sizing.md)): 50 nodes at 5 min with 0.21 % uplink loss using adaptive data rate (target under 1 %), 6.4 W average, 2.4 h of backup, 4.7 GB of data a year, and $290 in parts within the $300 budget. At 40 °C ambient the processor stays about 16 K below its assumed throttle point at normal load; heavy database jobs are scheduled for cool hours. Fifteen of sixteen requirements are met on paper; setup time needs a timed trial.
+A DIN rail edge gateway (single-board computer, 8-channel LoRaWAN concentrator, 12 V input and LiFePO4 backup) runs open-source software that receives readings from FieldNode and other sensors, stores a year of data offline, and shows each reading on the project's build123d model next to the value its design calculation predicted. TRL 3 calculations ([TWK-CAL-001](docs/04-calcs/01-sizing.md)): 50 nodes at 5 min with 0.21 % uplink loss using adaptive data rate (target under 1 %), 6.4 W average, 2.4 h of backup, 4.7 GB of data a year, and an estimated USD 334 in parts against a USD 300 value-engineering target. At 40 °C ambient the processor stays about 16 K below its assumed throttle point at normal load; heavy database jobs are scheduled for cool hours. Fourteen of sixteen requirements are met on paper; setup time needs a timed trial, and cost is reported against its target.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
@@ -64,12 +64,18 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 - Single-board computer (4 GB) in a vented 9-module DIN rail enclosure
 - 8-channel LoRaWAN concentrator HAT and antenna (Wi-Fi and Ethernet built in; cellular optional)
-- 12 V DC input (9 to 30 V) with 3.15 A time-delay fuse, DC-DC converter, DIN UPS module with buck-boost charger and 12.8 V LiFePO4 backup pack
+- 12 V DC input (9 to 30 V) with 3.15 A time-delay fuse, DC-DC converter, DIN UPS module with buck-boost charger, and a 12.8 V LiFePO4 backup pack in its own DIN battery box
 - Open-source network server, MQTT broker, TimescaleDB and dashboard
 - TwinKit twin service and model-to-data mapping schema
 - Example twin of FieldNode's battery and solar charge
 
 The priced bill of materials is in [bom/bom.csv](bom/bom.csv). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP and STL exports in `cad/step/` and `cad/stl/`.
+
+## Building the prototype
+
+![TwinKit prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
+
+The [prototype build plan](docs/05-build-plan.md) (TWK-BLD-001) shows, in pictures, how to make each of the twenty components and put them together in seventeen steps; nothing has been built yet. The worked parts are an aluminium bench plate, a cut DIN rail, and three bought DIN enclosures that are cut or drilled; everything else is bought DIN modules, boards and fittings, wired at their screw terminals. Writing the plan made the design buildable: the backup pack moved into its own battery box, the vents moved to the long walls, and standoffs, an antenna bulkhead, cable entries, rail screws and end stops were added (TWK-DDR-003, open for Amish's review). Every picture is drawn from the model, and the model checks that each part touches what it should and clears what it should not.
 
 ## Safety
 

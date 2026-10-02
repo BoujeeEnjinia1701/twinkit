@@ -3,9 +3,9 @@ doc_id: TWK-PRC-001
 title: TwinKit design precis
 project: TwinKit
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). Adaptive data rate and cool-hours job scheduling become design rules; $300 budget
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Constructable design (TWK-DDR-003): battery box, vents in the long walls, fittings; cost against the value-engineering target; GA Rev P3; build plan TWK-BLD-001"
 ---
 
 # TwinKit design precis
 
-TwinKit is a small DIN rail edge gateway plus open software that receives sensor readings, stores them, and shows each reading on the project's own build123d model next to the value the design calculation predicted. The TRL 3 calculations (TWK-CAL-001) show one single-board computer with a LoRaWAN concentrator serving 50 sensor nodes, storing a year of data in 4.7 GB and riding through a 2.4 h outage on 6.4 W. With adaptive data rate, uplink loss is 0.21 % against 1 % (R1), and the $290 parts cost fits the $300 budget Amish set on 2026-09-25 (R14). The processor stays 15.9 K below its assumed throttle point at 40 °C and light load, with heavy jobs moved to cool hours (R12). The design choices below were proposed at TRL 2 and decided by Amish on 2026-09-25 (TWK-DDR-001, TWK-DDR-002).
+TwinKit is a small DIN rail edge gateway plus open software that receives sensor readings, stores them, and shows each reading on the project's own build123d model next to the value the design calculation predicted. The TRL 3 calculations (TWK-CAL-001) show one single-board computer with a LoRaWAN concentrator serving 50 sensor nodes, storing a year of data in 4.7 GB and riding through a 2.4 h outage on 6.4 W. With adaptive data rate, uplink loss is 0.21 % against 1 % (R1), and the constructable design costs USD 334 in parts against a USD 300 value-engineering target, USD 34 over (R14). The processor stays 15.9 K below its assumed throttle point at 40 °C and light load, with heavy jobs moved to cool hours (R12). The design choices below were proposed at TRL 2 and decided by Amish on 2026-09-25 (TWK-DDR-001, TWK-DDR-002).
 
 ![Hero render](../media/hero.png)
 
@@ -76,15 +80,16 @@ Table 1. Main components (numbers match `bom/bom.csv` and Figure 3).
 
 | # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1, 2 | Bench plate and DIN rail | 6 mm plate, TS35 rail | Plate optional when an equipment cabinet exists |
+| 1, 2 | Bench plate and DIN rail | 6 mm aluminium plate on rubber feet; 350 mm TS35 top-hat rail on three M4 screws | Plate optional when an equipment cabinet exists |
 | 3, 4 | Gateway enclosure | 9-module DIN enclosure, vented, clear cover | Holds the computer and concentrator |
 | 5, 6 | Single-board computer and cooler | 4 GB quad-core Arm board (Raspberry Pi 5 class) | Runs all software; about 2.4 GB used. Decided by Amish, 2026-09-25 (TWK-DDR-002) |
 | 7 | LoRaWAN concentrator | SX1302 or SX1303 8-channel HAT | Region version (EU868 or US915). Decided by Amish, 2026-09-25 (TWK-DDR-002) |
 | 8 | Storage | 64 GB high-endurance microSD | SSD upgrade is an option |
 | 9 | Antenna | 3 dBi whip on an SMA bulkhead | Mounted on the cover or outside a cabinet; tip 264 mm above the plate |
 | 10 | DC-DC converter | 9 to 30 V in, 5.1 V 5 A out | Accepts a 12 V adapter or an existing 12 V system |
-| 11, 12 | Backup | DIN UPS module with a 9 to 30 V buck-boost charger and a 12.8 V, 1.5 Ah LiFePO4 pack with built-in BMS | Power-fail signal triggers a clean shutdown. Pack choice decided by Amish, 2026-09-25 (TWK-DDR-002) |
+| 11, 12, 17 | Backup | 3-module DIN UPS module with a 9 to 30 V buck-boost charger, and a 12.8 V, 1.5 Ah LiFePO4 pack with built-in BMS in its own 3-module battery box | Power-fail signal triggers a clean shutdown. Pack choice decided by Amish, 2026-09-25 (TWK-DDR-002) |
 | 13 | Terminals and fuse | DIN terminal blocks, 3.15 A time-delay fuse | Fuse at the supply input; raised from 2 A by TWK-CAL-001 [D3] |
+| 18 to 21 | Fittings | Rail end stops, board standoffs and header extender, network feed-through coupler and cable glands, screws, feet and wiring | Added to make the design buildable (TWK-DDR-003) |
 | 14 | Open-source stack | LoRaWAN network server, MQTT broker, TimescaleDB, dashboard | All open source, no cloud account. Decided by Amish, 2026-09-25 (TWK-DDR-002) |
 | 15 | Twin service and schema | Python service and YAML twin file | TwinKit's own code, MIT |
 | 16 | Example twin | FieldNode battery and solar charge | Decided by Amish, 2026-09-25 (TWK-DDR-002) |
@@ -95,7 +100,7 @@ Figure 3. Exploded view with BOM numbers.
 
 ![Cutaway](../media/cutaway.png)
 
-Figure 4. Cutaway through the gateway enclosure (left), converter (center) and UPS with backup pack (right).
+Figure 4. Cutaway through the terminals (left), gateway enclosure, converter, UPS module and the battery box with the backup pack (right).
 
 ## Sizing results
 
@@ -116,14 +121,18 @@ Table 2. Sizing results (TWK-CAL-001).
 | Backup time | 2.40 h new, 1.63 h aged at 0 °C [E1] | 15.36 Wh usable at 6.41 W | R9 met (30 min) |
 | Processor at 40 °C ambient | 69.1 °C light load, 96.9 °C sustained full load, vented [F2] | 5 W/m²K, 640 mm² vents 42 mm apart, 4 K/W with fan | R12 met at light load; heavy jobs in cool hours [F6] |
 | Memory | about 2.42 GB of 4 GB [G1] | Stack budget | Supports the 4 GB board |
-| Rail length used | 294 mm, 16.8 modules [H1] | From `cad/src/model.py` | R10 met (350 mm) |
-| Parts cost | $290.00 [I1] | Priced `bom/bom.csv`, indicative | R14 met ($300 budget) |
+| Rail length used | 331 mm, 18.9 modules; 345 mm with end stops on a 350 mm rail [H1] | From `cad/src/model.py` | R10 met (350 mm) |
+| Parts cost | $334.00 [I1] | Priced `bom/bom.csv`, indicative | R14: USD 34 over the USD 300 value-engineering target |
 
 Thermal is still the main technical uncertainty. At light load the processor stays about 16 K below its throttle point at 40 °C, but a sustained heavy job would throttle, and doubling the vents barely helps (TWK-CAL-001 [F5]). Heavy database jobs therefore run in cool hours by design. A larger or metal enclosure is the hardware fallback if TRL 4 tests (on hold) show throttling.
 
 ![General arrangement](../cad/drawings/TWK-DWG-001.png)
 
-Figure 5. General arrangement TWK-DWG-001 Rev P1, generated from the parametric model `cad/src/model.py` ([PDF](../cad/drawings/TWK-DWG-001.pdf)). Preliminary, not for fabrication.
+Figure 5. General arrangement TWK-DWG-001 Rev P3, generated from the parametric model `cad/src/model.py` ([PDF](../cad/drawings/TWK-DWG-001.pdf)). Preliminary, not for fabrication.
+
+## Constructable design
+
+The model is now constructable (TWK-DDR-003, open for Amish's review): every part can be bought or made with a saw, drill, tap and file, and every part is held by the part next to it. The backup pack moved out of the UPS module into its own 3-module battery box, the enclosure vents moved from the end walls (which face the neighbouring modules 2 mm away) to the long walls with the same area, the boards sit on standoffs, the network and power leads enter through a coupler and a gland in the front wall, and the rail is a true top-hat section screwed to an aluminium plate with an end stop at each end. The illustrated prototype build plan is [TWK-BLD-001](05-build-plan.md); open decisions and purchase checks are in the design decisions register [TWK-DEC-001](06-design-decisions.md).
 
 ## Key design choices
 
@@ -152,6 +161,8 @@ Figure 5. General arrangement TWK-DWG-001 Rev P1, generated from the parametric 
 > **Safety:** TwinKit is a monitoring aid. It must not be relied on as a safety system, and it does not replace alarms, protection devices or inspections that a regulation or the equipment maker requires.
 
 ## Open questions after TRL 3
+
+All open decisions are kept in the design decisions register ([TWK-DEC-001](06-design-decisions.md)).
 
 - Co-design partner outside the lab. Proposed, awaiting Amish.
 - Processor temperature, card endurance and the power figures are assumptions that only measurement can settle.

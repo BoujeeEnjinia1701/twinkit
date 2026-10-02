@@ -1,4 +1,4 @@
-"""TwinKit sizing calculations, TWK-CAL-001 v0.2 (TRL 3).
+"""TwinKit sizing calculations, TWK-CAL-001 v0.3 (TRL 3, constructable design per TWK-DDR-003).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md. Each line carries a tag such as
@@ -166,7 +166,7 @@ run_worst = run * COLD * AGED
 tag("E1", f"load on battery {p_bat:.2f} W; usable {e_use:.2f} Wh; runtime {run:.2f} h new, {run_worst:.2f} h aged pack at 0 C")
 tag("E2", f"clean shutdown needs {P_SHUTDOWN * T_SHUTDOWN_S / 3600:.2f} Wh; recharge from the cut-off in about "
           f"{PACK_AH * USABLE / I_CHG:.1f} h at {I_CHG} A")
-tag("E3", f"charger loss while charging {p_chg - V_CHG * I_CHG:.2f} W, dissipated in the UPS module beside the pack")
+tag("E3", f"charger loss while charging {p_chg - V_CHG * I_CHG:.2f} W, dissipated in the UPS module, which stands beside the battery box")
 results["R9"] = ("Met", f"{run:.1f} h new, {run_worst:.1f} h worst case, against 30 min")
 
 # ------------------------------------------------------------------ F. enclosure and processor temperature (R12)
@@ -208,6 +208,13 @@ tag("F5", f"sensitivity, vent area doubled: full load air rise {rise(p_in_pk, H_
           f"{T_AMB + rise(p_in_pk, H_SURF, True) + P_SOC_PEAK * THETA_SOC:.1f} C; light load processor "
           f"{T_AMB + rise(p_in, H_SURF, True) + P_SOC_LIGHT * THETA_SOC:.1f} C")
 a_eff = a_save
+# TWK-DDR-003: the end walls face the neighbouring modules 2 mm away, so count them as shielded
+A_full = A
+A = D["enc_area_shielded_m2"]
+lt7, fl7 = T_AMB + rise(p_in, H_SURF, True) + P_SOC_LIGHT * THETA_SOC, T_AMB + rise(p_in_pk, H_SURF, True) + P_SOC_PEAK * THETA_SOC
+tag("F7", f"sensitivity, end walls shielded by the neighbouring modules ({A:.4f} m2 exposed): light load processor {lt7:.1f} C, "
+          f"margin {T_THROTTLE - lt7:.1f} K; full load {fl7:.1f} C")
+A = A_full
 tag("F4", f"TRL 2 estimate: {p_in:.1f} W over {A:.4f} m2 at h = 5 sealed gives {p_in / (5 * A):.1f} K (TRL 2 quoted about 20 K)")
 lt, fl = cases[("light", True)], cases[("full", True)]
 # R12 as restated by TWK-DDR-002: no throttling at the normal light load; heavy jobs are scheduled for cool hours
@@ -224,7 +231,8 @@ tag("G2", f"a 2 GB board would leave {2 - mem:.2f} GB")
 tag("G3", f"ingest rate {up_h / 3600:.2f} uplinks/s, {up_h * FIELDS / 3600:.1f} values/s")
 
 # ------------------------------------------------------------------ H. rail (R10)
-tag("H1", f"rail used {D['rail_used_mm']:.0f} mm ({D['rail_used_modules']:.1f} modules) on a {P['rail'][0]:.0f} mm rail; target 350 mm (20 modules)")
+tag("H1", f"rail used {D['rail_used_mm']:.0f} mm ({D['rail_used_modules']:.1f} modules), {D['rail_occupied_mm']:.0f} mm with both end stops, "
+          f"on a {P['rail'][0]:.0f} mm rail; target 350 mm (20 modules)")
 tag("H2", f"overall height to the antenna tip {D['antenna_top_z']:.0f} mm above the plate; enclosure top {D['enc_top_z']:.1f} mm")
 results["R10"] = ("Met", f"{D['rail_used_mm']:.0f} mm ({D['rail_used_modules']:.1f} modules) against 350 mm")
 
@@ -232,14 +240,16 @@ results["R10"] = ("Met", f"{D['rail_used_mm']:.0f} mm ({D['rail_used_modules']:.
 rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 total = sum(float(r["unit_cost_usd"]) * float(r["qty"]) for r in rows)
 budget = float(yaml.safe_load((ROOT / "project.yaml").read_text())["budget_usd"])
-hw = {k: sum(float(r["unit_cost_usd"]) for r in rows if r["item"].split()[0] in ks)
+hw = {k: sum(float(r["unit_cost_usd"]) * float(r["qty"]) for r in rows if r["item"].split()[0] in ks)
       for k, ks in (("computer, cooler and card", ("5", "6", "8")), ("radio and antenna", ("7", "9")),
-                    ("power and backup", ("10", "11", "12", "13")), ("enclosure, rail and plate", ("1", "2", "3", "4")))}
+                    ("power and backup", ("10", "11", "12", "13")), ("enclosure, rail and plate", ("1", "2", "3", "4")),
+                    ("battery box and fittings for construction", ("17", "18", "19", "20", "21")))}
 tag("I1", f"{len(rows)} BOM lines, all priced; total ${total:.2f}: " + ", ".join(f"{k} ${v:.0f}" for k, v in hw.items()))
-TRL2_BUDGET = 200.0
-tag("I2", f"against budget_usd ${budget:.0f}: {'within by' if total <= budget else 'over by'} ${abs(budget - total):.2f} "
-          f"(the earlier ${TRL2_BUDGET:.0f} budget would be exceeded by ${total - TRL2_BUDGET:.2f})")
-results["R14"] = ("Met" if total <= budget else "Not met", f"${total:.0f} against ${budget:.0f}; no custom PCB")
+# budget_usd is a value-engineering target, not a limit (STANDARDS section 18; Amish, 2026-10-01)
+tag("I2", f"value-engineering target ${budget:.0f}; estimated cost of the constructable design ${total:.2f} "
+          f"(${abs(budget - total):.2f} {'under' if total <= budget else 'over'} the target)")
+results["R14"] = ("Under the target" if total <= budget else "Over the target",
+                  f"${total:.0f} against the ${budget:.0f} value-engineering target; no custom PCB")
 
 # ------------------------------------------------------------------ J. summary
 by_design = {"R2": "Concentrator for LoRaWAN; MQTT and HTTP on Ethernet or Wi-Fi",

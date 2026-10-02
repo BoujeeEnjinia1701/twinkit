@@ -3,9 +3,9 @@ doc_id: TWK-REQ-001
 title: TwinKit requirements
 project: TwinKit
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). R1 restated with adaptive data rate, R12 restated at light load, R14 target raised to $300
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Constructable design (TWK-DDR-003): R10 with the battery box and end stops; R14 reported against the value-engineering target"
 ---
 
 # TwinKit requirements
 
-Status is judged from the TRL 3 calculation note TWK-CAL-001 v0.2 and the parametric model. No requirement is now shown as not met or at risk; R13 (setup time) can only be shown by a timed trial. Three requirements were changed at this revision by Amish's decisions of 2026-09-25 (TWK-DDR-002): R1 now requires adaptive data rate (was: under 1 % at SF7 to SF9, which failed at 1.02 % with every node on SF9); R12 now applies at the normal light load, with heavy jobs scheduled for cool hours (was: at any load, at risk); and R14's parts limit rises from $200 to $300 (was not met at $290).
+Status is judged from the TRL 3 calculation note TWK-CAL-001 v0.3 and the constructable model of TWK-DDR-003. No requirement is shown as not met or at risk; R13 (setup time) can only be shown by a timed trial. At v0.5, R14 is reported against its value-engineering target (Amish, 2026-10-01: the budget is "a hypothethical control target"): the constructable design is USD 34 over it. R10 still holds with the battery box and end stops added. Three requirements were changed at this revision by Amish's decisions of 2026-09-25 (TWK-DDR-002): R1 now requires adaptive data rate (was: under 1 % at SF7 to SF9, which failed at 1.02 % with every node on SF9); R12 now applies at the normal light load, with heavy jobs scheduled for cool hours (was: at any load, at risk); and R14's parts limit rises from $200 to $300 (was not met at $290).
 
 Table 1. Requirements.
 
@@ -44,11 +48,11 @@ Table 1. Requirements.
 | R7 | Work offline | All functions run with no internet; optional upstream sync buffers at least 7 days | Met by design; 7-day buffer 91 MB [B3] | Offline run |
 | R8 | Low-voltage power | 9 to 30 V DC input, 12 V nominal; average draw 8 W or less | Met: 6.41 W average; 20.6 W peak, 2.29 A at 9 V, 3.15 A T fuse [D1 to D3] | Power measurement |
 | R9 | Ride through outages | At least 30 min on backup and a clean shutdown before the pack is empty | Met: 2.40 h new, 1.63 h aged pack at 0 °C [E1] | Timed outage |
-| R10 | Compact mounting | Fits a TS35 DIN rail; gateway, converter and backup within 20 modules (350 mm) of rail | Met: 294 mm, 16.8 modules [H1] | Fit check |
+| R10 | Compact mounting | Fits a TS35 DIN rail; gateway, converter and backup within 20 modules (350 mm) of rail | Met: 331 mm, 18.9 modules; 345 mm with the end stops on a 350 mm rail [H1] | Fit check |
 | R11 | Secure by default | Unique credentials set at first boot, TLS on the dashboard, no ports open beyond the local network by default | Met by design | Configuration audit |
 | R12 | Operate in a lab or equipment room | Ambient 0 to 40 °C without CPU throttling at the normal light load; heavy jobs (database recompression, backups, rebuilds) scheduled for cool hours | Met: processor 69.1 °C at light load, vented, 15.9 K below an assumed 85 °C throttle point [F6]; 96.9 °C if a heavy job ran at 40 °C [F2] | Thermal test at 40 °C |
 | R13 | Quick setup | From a flashed card to the first live reading on the dashboard in 60 min or less, following the guide | Not verifiable at TRL 3 | Timed trial |
-| R14 | Low cost and buildable | Parts $300 or less (raised from $200, TWK-DDR-002); no custom PCB | Met: $290.00 [I1, I2]; no custom PCB | Supplier quotes |
+| R14 | Low cost and buildable | Parts cost against a USD 300 value-engineering target (raised from $200, TWK-DDR-002; a control target, not a limit); no custom PCB | USD 334.00, USD 34 over the target [I1, I2]; no custom PCB | Supplier quotes |
 | R15 | Open and exportable | All software open source; data exportable as CSV and through an open API | Met by design | Design review |
 | R16 | Monitoring only | No control outputs; the gateway cannot actuate the monitored system | Met by design | Design review |
 

@@ -179,3 +179,54 @@ Amish asked on 2026-09-26 for photoreal renders across the portfolio, starting w
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-02: design for construction and prototype build plan (kit 1.7.0)
+
+Amish approved the build plan format on 2026-09-30 and asked for it across all repos, with outstanding decisions kept in a separate design decisions register. He also wrote on 2026-09-30: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." This session installed kit 1.7.0 and did that for TwinKit.
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` replaced by `.kit/CLAUDE.md`.
+- `cad/src/model.py`: constructable model with 274 build123d checks (`python cad/src/model.py --check`, all pass): no overlaps, every part touching what holds it, clearances kept. STEP and STL regenerated.
+- `docs/decisions/0003-design-for-construction.md` (TWK-DDR-003 v0.1, status proposed): every change, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review.
+- `cad/src/build_plan_media.py`: overview, 5 making sketches (TWK-DWG-101 to 105), 2 hole layouts, 7 joint close-ups, 17 assembly step pictures and a wiring diagram, all drawn from the model.
+- `docs/05-build-plan.md` (TWK-BLD-001 v0.1) and `docs/06-design-decisions.md` (TWK-DEC-001 v0.1).
+- `cad/drawings/TWK-DWG-001` Rev P3; concept media regenerated (`media/hero.png`, `exploded.png`, `cutaway.png`, `concept-blueprint.*`, `model.glb`, `viewer.html`).
+- `bom/bom.csv` (lines 1, 2, 3, 11, 12 respecified; lines 17 to 21 added) and `bom/bom-notes.md`; `docs/04-calcs/sizing.py` and TWK-CAL-001 v0.3 (new tag [F7]; cost against the value-engineering target); TWK-REQ-001 v0.5, TWK-PRC-001 v0.5, TWK-PRB-001 v0.5; `README.md` (links line, "Building the prototype"); `project.yaml` (`design_state: constructable`, new evidence). PDFs rebuilt in `docs/pdf/`.
+
+### Design changes made for construction (TWK-DDR-003)
+
+| # | Change | Reason |
+| --- | --- | --- |
+| P1 | Backup pack moved out of the UPS module into its own 3-module battery box; UPS module 3 modules wide with no internal battery | Two bought parts cannot nest |
+| P2 | Vent slots moved from the end walls to the long walls, same area and spacing | The end walls face neighbouring modules 2 mm away |
+| P3 | Computer and HAT on 6 mm and 16 mm brass standoffs with a header extender | Both boards floated |
+| P4 | SMA bulkhead through a 6.5 mm hole in the cover, pigtail to the HAT | The antenna sat on the cover with no hole |
+| P5 | RJ45 feed-through coupler and an M16 two-hole gland in the front wall | No path for the network or power leads |
+| P6 | True TS35 top-hat rail, 350 mm, on three M4 screws into tapped holes | U channel with no fixing |
+| P7 | DIN clip hooks modelled on every module; two end stops | Modules could slide off |
+| P8 | 6 mm aluminium plate, tapped, on four rubber feet, with corner holes | "Plywood or aluminium" could not hold the rail |
+| P9 | USB-C power lead and a power-fail pair to the computer | No power or power-fail path into the enclosure |
+
+### Key results
+
+- Rail: 331 mm of modules (18.9 modules), 345 mm with end stops, on a 350 mm rail; R10 met.
+- Thermal: unchanged design case (69.1 °C at light load); with the end walls counted as shielded, 72.8 °C, 12.2 K margin [F7]; R12 met.
+- Cost: value-engineering target USD 300; estimated cost of the constructable design USD 334 (USD 34 over the target). The concept was USD 290.
+- Requirements: none not met, none at risk, 7 met by calculation, 7 met by design, R13 not verifiable at TRL 3, R14 reported against its target.
+
+### Proposed, awaiting Amish
+
+All in TWK-DEC-001: accept the TWK-DDR-003 changes (recommended); the region and radio band, to match FieldNode's pilot region; the co-design partner (no recommendation). Eight purchase checks are listed there.
+
+### Stale media
+
+The photoreal renders (`media/render-hero.png`, `media/render-detail.png`), `media/card.png` and `media/social-preview.png` show the concept: the pack inside the UPS, vents in the end walls, no battery box or end stops. They need regenerating on Amish's Mac; `media/render-hero.png` and `media/render-detail.png` are also absent from this cloud copy.
+
+### Safety
+
+No change to the safety case. The pack, its BMS and fuse, and the charge path through the UPS module are unchanged; the build plan adds safety stops before the adapter is plugged in, before the pack is connected, for the first charge, before the radio transmits and before the gateway joins a wider network.
+
+### Recommended next step
+
+Amish to review TWK-DDR-003 and the register. TRL 4 (building and testing to TWK-BLD-001) remains on hold.

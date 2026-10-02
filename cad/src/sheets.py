@@ -1,4 +1,4 @@
-"""TwinKit general arrangement sheet TWK-DWG-001, Rev P1 (TRL 3).
+"""TwinKit general arrangement sheet TWK-DWG-001, Rev P3 (TRL 3, constructable design).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/TWK-DWG-001.svg, .pdf and .png from the parametric model in
@@ -15,6 +15,7 @@ from drawing import Sheet, _viewbox, _t, M, TB_Y, INK, MUTED  # noqa: E402
 from model import PARAMS as P, assembly, derived  # noqa: E402
 
 DATE = "2026-09-25"
+DATE_P3 = "2026-10-02"
 
 
 def safe_project_views(part, workdir, line_weight=0.35):
@@ -93,11 +94,12 @@ def main():
     asm = assembly()
     views = safe_project_views(asm, work)
     bb = asm.bounding_box()
-    s = Sheet(project="TwinKit", title="General arrangement, edge gateway", dwg_no="TWK-DWG-001", rev="P2",
-              author="Amish Chadha", date=DATE, scale=None, theme="technical",
+    s = Sheet(project="TwinKit", title="General arrangement, edge gateway", dwg_no="TWK-DWG-001", rev="P3",
+              author="Amish Chadha", date=DATE_P3, scale=None, theme="technical",
               material="Bought-in DIN modules per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "Layout and labels tidied", DATE, "AC")])
+                         ("P2", "Layout and labels tidied", DATE, "AC"),
+                         ("P3", "Constructable design: vents in long walls, battery box, end stops, fixings (TWK-DDR-003)", DATE_P3, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -116,9 +118,9 @@ def main():
         xd = xr + 7 * i
         L.append(ext(X(xg + ew / 2 if i == 0 else xg - 30), Z(zz), xd + 1, Z(zz)))
         L += dim_v(xd, Z(zz), Z(0), label, side=3)
-    L.append(ext(X(D["x_ups"] + P["ups_modules"] * P["module"] / 2), Z(0), xr + 8, Z(0)))
+    L.append(ext(X(D["rail_right"]), Z(0), xr + 8, Z(0)))
     L += leader(X(xg - 30), Z(D["antenna_top_z"] - 60), X(xg - 30) + 8, Z(D["antenna_top_z"] - 40), "9 ANTENNA, SMA BULKHEAD")
-    L += leader(X(xg + ew / 2 - 1), Z(zr + P["vent_z_high"]), X(xg + ew / 2) + 6, Z(zr + P["vent_z_high"] + 70), "VENTS BOTH ENDS")
+    L += leader(X(xg + P["vent_dx"] - 15), Z(zr + P["vent_z_high"]), X(xg + 40), Z(zr + P["vent_z_high"] + 45), "VENTS IN BOTH LONG WALLS")
     L.append(_t(X(bb.max.X), Z(0) + 4, "PLATE TOP Z = 0", 1.9, 400, MUTED, "end"))
 
     # top view (from +Z): X right, Y up
@@ -145,14 +147,14 @@ def main():
     s.add_svg(views["iso"], 276, 34, 140, 98, label="Isometric view", sublabel="Not to scale")
     m = P["module"]
     s.add_notes("Main dimensions and interfaces (mm)", [
-        f"TS35 x 7.5 rail, {P['rail'][0]:.0f} long; module pitch {m}",
-        f"13 terminals and 3.15 A T fuse | 3, 4 enclosure {P['enc_modules']} mod | 10 DC-DC {P['psu_modules']} mod | 11, 12 UPS {P['ups_modules']} mod",
+        f"TS35 x 7.5 rail, {P['rail'][0]:.0f} long, on 3 M4 screws; module pitch {m}",
+        f"13 terminals, fuse | 3, 4 enclosure {P['enc_modules']} mod | 10 DC-DC {P['psu_modules']} mod | 11 UPS {P['ups_modules']} mod",
+        f"17 battery box {P['box_modules']} mod holding 12 pack (12.8 V, 1.5 Ah) | 18 end stops",
         f"Enclosure {ew:.1f} x {ed:.0f} x {eh:.0f} above the rail; top {D['enc_top_z']:.1f} above the plate",
         f"Vents {D['vent_low_mm2']:.0f} mm2 low and high, {D['vent_stack_mm']:.0f} apart (TWK-CAL-001 F)",
-        f"5 board {P['sbc'][0]:.0f} x {P['sbc'][1]:.0f} on {P['sbc_standoff']:.0f} standoffs; 7 HAT on 40-pin header",
-        "Input 9 to 30 V DC, 12 V nominal; 6.4 W average, 20.6 W peak",
-        "Pack 12.8 V, 1.5 Ah LiFePO4 with BMS, inside the UPS module",
-        f"Plate {P['plate'][0]:.0f} x {P['plate'][1]:.0f} x {P['plate'][2]:.0f}; omit in a cabinet",
+        f"5 board {P['sbc'][0]:.0f} x {P['sbc'][1]:.0f} on {P['sbc_standoff']:.0f} standoffs; 7 HAT on {P['hat_standoff']:.0f} standoffs",
+        "20 RJ45 coupler and cable glands in the -Y walls; 9 to 30 V DC in",
+        f"Plate {P['plate'][0]:.0f} x {P['plate'][1]:.0f} x {P['plate'][2]:.0f} aluminium; omit in a cabinet",
         "Third-angle; front view from -Y; X along the rail",
     ], x=276, y=158, width=140)
     out = s.save(ROOT / "cad" / "drawings" / "TWK-DWG-001")

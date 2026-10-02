@@ -3,9 +3,9 @@ doc_id: TWK-PRB-001
 title: TwinKit problem statement
 project: TwinKit
 doc_type: Problem statement
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). Budget constraint raised to $300; open questions closed except the co-design partner
+- version: "0.5"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Budget worded as a value-engineering target; cost of the constructable design (TWK-DDR-003)
 ---
 
 # TwinKit problem statement
@@ -63,7 +67,7 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 
 ## Constraints
 
-- Garage-buildable prototype, $300 USD or less in parts (raised from $200 by Amish on 2026-09-25, TWK-DDR-002), from off-the-shelf modules with no custom PCB.
+- Garage-buildable prototype from off-the-shelf modules with no custom PCB. Value-engineering target for the parts: USD 300 (raised from USD 200 by Amish on 2026-09-25, TWK-DDR-002); a hypothetical control target, not a limit (Amish, 2026-10-01).
 - Runs on one gateway with no internet connection and no vendor cloud account.
 - Open licenses throughout: hardware CERN-OHL-S-2.0, TwinKit code MIT, and open-source third-party software.
 - Low voltage only (12 V DC input).
@@ -81,5 +85,5 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 
 - First example twin: FieldNode (battery state of charge against its power-budget calculation). Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
 - Radio: a full LoRaWAN concentrator rather than a point-to-point LoRa receiver. Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
-- Budget: the parts cost is $290 (TWK-CAL-001). Decided by Amish, 2026-09-25: go with recommendation, `budget_usd` raised from $200 to $300 (TWK-DDR-002).
+- Budget: decided by Amish, 2026-09-25: go with recommendation, `budget_usd` raised from $200 to $300 (TWK-DDR-002). Value-engineering target: USD 300. Estimated cost of the constructable design: USD 334 (USD 34 over the target; TWK-CAL-001 v0.3, TWK-DDR-003).
 - Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? No recommendation; proposed, awaiting Amish.

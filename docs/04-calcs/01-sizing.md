@@ -3,9 +3,9 @@ doc_id: TWK-CAL-001
 title: TwinKit sizing calculations
 project: TwinKit
 doc_type: Calculation
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,11 +17,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002). R1 judged with adaptive data rate, R12 at light load with heavy jobs in cool hours, R14 against the $300 budget
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Constructable design (TWK-DDR-003). Vents in the long walls, battery box, 350 mm rail, new fittings costed; shielded end-wall sensitivity [F7]; budget treated as a value-engineering target
 ---
 
 # TwinKit sizing calculations
 
-On paper, TwinKit meets fifteen of its sixteen requirements (eight by calculation, seven by design); R13 (setup time) cannot be checked at TRL 3 and needs a timed trial. This revision applies the decisions Amish made on 2026-09-25 (TWK-DDR-002), which changed three results from v0.1. R14 (cost) is now met: the priced BOM totals $290 against the $300 `budget_usd` (was $200, not met). R1 (uplink loss) is now judged with adaptive data rate required, which spreads nodes over SF7 to SF9 and loses 0.21 % of uplinks against 1 %; with every node forced to SF9 the loss would be 1.02 % (v0.1 reported R1 as not met on that case). R12 (no processor throttling at 40 °C) is now defined at the normal light load, where the processor stays 15.9 K below its assumed throttle point, with heavy jobs scheduled for cool hours (v0.1: at risk). The calculations changed two parts of the TRL 2 concept: the input fuse rises from 2 A to 3.15 A time-delay, and the UPS module is specified with a buck-boost charger so that it can charge the 12.8 V pack from a 9 V to 12 V input. Several TRL 2 figures were corrected (see the last section). Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A2], is the line of that script's output that carries it.
+On paper, TwinKit meets fourteen of its sixteen requirements (seven by calculation, seven by design); R13 (setup time) cannot be checked at TRL 3 and needs a timed trial, and R14 (cost) is reported against a value-engineering target rather than as met or not met. Version 0.3 follows the constructable design of TWK-DDR-003: the vents move from the end walls to the two long walls (same area and spacing, so the thermal results stand), the backup pack moves out of the UPS module into its own battery box, the rail grows to 350 mm, and the fittings that hold everything together are now in the BOM. Value-engineering target: USD 300. Estimated cost of the constructable design: USD 334 (USD 34 over the target) [I1, I2]. Version 0.2 applied the decisions Amish made on 2026-09-25 (TWK-DDR-002), which changed three results from v0.1. R1 (uplink loss) is now judged with adaptive data rate required, which spreads nodes over SF7 to SF9 and loses 0.21 % of uplinks against 1 %; with every node forced to SF9 the loss would be 1.02 % (v0.1 reported R1 as not met on that case). R12 (no processor throttling at 40 °C) is now defined at the normal light load, where the processor stays 15.9 K below its assumed throttle point, with heavy jobs scheduled for cool hours (v0.1: at risk). The calculations changed two parts of the TRL 2 concept: the input fuse rises from 2 A to 3.15 A time-delay, and the UPS module is specified with a buck-boost charger so that it can charge the 12.8 V pack from a 9 V to 12 V input. Several TRL 2 figures were corrected (see the last section). Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [A2], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They are not a substitute for electrical safety checks of the 12 V wiring and the LiFePO4 pack, or for a security audit of the gateway. See TWK-PRC-001, Safety.
 
@@ -80,11 +84,12 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 
 ## F. Enclosure and processor temperature (R12)
 
-- **Geometry.** The 157.5 x 90 x 60 mm enclosure exposes 0.0439 m². Two slot rows at each end give 640 mm² of low and of high vent, 42 mm apart vertically in the bench case. It holds 5.5 W at light load and 9.5 W at full load [F1].
+- **Geometry.** The 157.5 x 90 x 60 mm enclosure exposes 0.0439 m². Two slot rows in each long wall give 640 mm² of low and of high vent, 42 mm apart vertically in the bench case. The constructable design (TWK-DDR-003) moved the slots from the end walls, which face the neighbouring modules only 2 mm away, to the long walls; area and spacing are unchanged. It holds 5.5 W at light load and 9.5 W at full load [F1].
 - **Light load.** Vented, the enclosure air rises 19.1 K to 59.1 °C at 40 °C ambient and the processor reaches 69.1 °C, 15.9 K below throttling. Sealed, the air rises 25.1 K and the processor reaches 75.1 °C [F2].
 - **Full load.** Sustained full load raises the processor to 96.9 °C vented and 109.3 °C sealed, so it would throttle [F2]. At the more typical 8 W/m²K it still reaches 88.3 °C [F3]. Doubling the vent area only brings it to 91.1 °C [F5].
+- **Shielded end walls.** With modules 2 mm away on both sides, the end walls shed little heat. Leaving them out of the exposed area (0.0331 m² instead of 0.0439 m²) raises the processor to 72.8 °C at light load, still 12.2 K below the assumed throttle point, and 102.4 °C at full load [F7]. R12 is met in this more cautious case too.
 - **Verdict.** R12, as restated in TWK-REQ-001 v0.4, applies at the normal light load (0.17 uplinks per second [G3]), with heavy jobs such as a full database recompression or backup scheduled for cool hours. In that case the processor reaches 69.1 °C, 15.9 K below the assumed throttle point [F6], so R12 is met on paper. A sustained heavy job at 40 °C would still throttle (96.9 °C), which is why the schedule rule is part of the design. The thermal resistance and throttle point are assumptions to be measured at TRL 4 (on hold); a larger or metal enclosure remains the hardware fallback if tests show throttling.
-- **Pack.** The LiFePO4 pack sits in the separate UPS module with only the charger's 0.81 W of loss while charging [E3], so it stays within a few kelvin of ambient and inside the usual 45 °C charge limit at 40 °C. A sealed street cabinet in sun (CityTwin) is a different case and is not covered here.
+- **Pack.** The LiFePO4 pack sits in its own battery box beside the UPS module (TWK-DDR-003), away from the charger's 0.81 W of loss while charging [E3], so it stays within a few kelvin of ambient and inside the usual 45 °C charge limit at 40 °C. A sealed street cabinet in sun (CityTwin) is a different case and is not covered here.
 
 ## G. Memory
 
@@ -93,13 +98,13 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 
 ## H. Rail and mounting (R10)
 
-- **Rail.** Terminals, enclosure, converter and UPS take 294 mm (16.8 modules) of a 320 mm rail [H1]. R10 (350 mm, 20 modules) is met.
+- **Rail.** Terminals, enclosure, converter, UPS and battery box take 331 mm (18.9 modules); with the two end stops they occupy 345 mm of a 350 mm rail [H1]. R10 (350 mm, 20 modules) is met. Before the constructable design the four modules took 294 mm (16.8 modules) of a 320 mm rail, with the pack drawn inside the UPS module.
 - **Height.** The enclosure top is 67.5 mm above the plate and the antenna tip 264 mm [H2].
 
 ## I. Cost (R14)
 
-- **Total.** All 16 BOM lines are priced; the total is $290.00: computer, cooler and card $85, radio and antenna $92, power and backup $85, enclosure, rail and plate $28 [I1].
-- **Against budget.** Amish raised `budget_usd` from $200 to $300 on 2026-09-25 (TWK-DDR-002). The total is $10.00 within it; the earlier $200 budget would have been exceeded by $90.00 [I2]. R14 is met. No custom PCB is used. The margin is small, and prices are indicative, not supplier quotes.
+- **Total.** All 21 BOM lines are priced; the total is $334.00: computer, cooler and card $85, radio and antenna $92, power and backup $85, enclosure, rail and plate $37, battery box and fittings for construction $35 [I1].
+- **Against the target.** `budget_usd` is a hypothetical value-engineering target, not a limit (Amish, 2026-10-01). Value-engineering target: USD 300. Estimated cost of the constructable design: USD 334 (USD 34 over the target) [I2]. The concept was USD 290; the battery box, end stops, board mounting kit, cable entries, fixings and the aluminium plate added USD 44 (TWK-DDR-003). No custom PCB is used. Prices are indicative, not supplier quotes. Savings worth trying are listed in the design decisions register (TWK-DEC-001).
 
 ## J. Results against every requirement
 
@@ -116,19 +121,19 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 | R7 | Work offline | All local; 91 MB for 7 days | 7-day buffer | Met by design |
 | R8 | Low-voltage power | 6.41 W average; 20.6 W peak | 9 to 30 V; 8 W average | Met |
 | R9 | Ride through outages | 2.40 h new, 1.63 h worst | 30 min and clean shutdown | Met |
-| R10 | Compact mounting | 294 mm, 16.8 modules | 350 mm, 20 modules | Met |
+| R10 | Compact mounting | 331 mm, 18.9 modules (345 mm with end stops) | 350 mm, 20 modules | Met |
 | R11 | Secure by default | First-boot credentials, TLS, no WAN ports | As stated | Met by design |
-| R12 | Operate at 0 to 40 °C | Processor 69.1 °C at light load; heavy jobs in cool hours (96.9 °C if run at 40 °C) | No throttling at light load (85 °C assumed) | Met |
+| R12 | Operate at 0 to 40 °C | Processor 69.1 °C at light load (72.8 °C with the end walls shielded); heavy jobs in cool hours (96.9 °C if run at 40 °C) | No throttling at light load (85 °C assumed) | Met |
 | R13 | Quick setup | Not calculable | 60 min | Not verifiable at TRL 3 |
-| R14 | Low cost | $290.00 | $300 (raised from $200, TWK-DDR-002) | Met |
+| R14 | Low cost | $334.00 | Value-engineering target $300 | $34 over the target |
 | R15 | Open and exportable | Open-source stack, CSV and API | As stated | Met by design |
 | R16 | Monitoring only | No control outputs | As stated | Met by design |
 
-Summary: 0 not met, 0 at risk, 8 met by calculation, 7 met by design, 1 not verifiable at TRL 3 (R13). In v0.1: 2 not met (R1, R14), 1 at risk (R12).
+Summary: 0 not met, 0 at risk, 7 met by calculation, 7 met by design, 1 not verifiable at TRL 3 (R13), and R14 reported against its value-engineering target (USD 34 over). In v0.2: 8 met by calculation, with R14 met at $290. In v0.1: 2 not met (R1, R14), 1 at risk (R12).
 
-## Checks against the TRL 2 figures
+## Checks against earlier figures
 
-*Table 3. TRL 2 figures corrected by this note.*
+*Table 3. Earlier figures corrected by this note (TRL 2, and TRL 3 v0.2 where marked).*
 
 | Quantity | TRL 2 (TWK-PRC-001 v0.2) | TRL 3 | Change |
 | --- | --- | --- | --- |
@@ -142,3 +147,5 @@ Summary: 0 not met, 0 at risk, 8 met by calculation, 7 met by design, 1 not veri
 | Rail used | about 300 mm (17 modules) | 294 mm (16.8 modules) | From the model |
 | Parts cost | about $285 | $290.00 | UPS with buck-boost charger |
 | Input fuse | 2 A | 3.15 A time-delay | Peak current at 9 V |
+| Rail used | 294 mm (TRL 3 v0.2) | 331 mm, 345 mm with end stops | Battery box and end stops added (TWK-DDR-003) |
+| Parts cost | $290.00 (TRL 3 v0.2) | $334.00 | Fittings for construction added (TWK-DDR-003) |
