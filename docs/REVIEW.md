@@ -230,3 +230,66 @@ No change to the safety case. The pack, its BMS and fuse, and the charge path th
 ### Recommended next step
 
 Amish to review TWK-DDR-003 and the register. TRL 4 (building and testing to TWK-BLD-001) remains on hold.
+
+## Session 2026-10-02: open decisions decided
+
+Amish, 2026-10-02: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." This approves the recommendation written for each open decision in the design decisions register (TWK-DEC-001), as he did for the other 555 open decisions ("i approve your recommendations for all 555 open decisions."). trl stays 3; no build or test work was done, and the model, BOM quantities and prices, and pictures are unchanged.
+
+### Decisions recorded
+
+Three decisions, all moved to Decisions made in TWK-DEC-001, dated 2026-10-02:
+
+1. Design for construction accepted: the changes P1 to P9 of TWK-DDR-003, as made.
+2. Region and radio band of the first build: US915, with the US915 concentrator HAT and a 915 MHz antenna, to match FieldNode's decided first variant.
+3. Co-design partner outside the lab: the first candidate to approach for the operator view is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner.
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (TWK-DEC-001 v0.2): open decisions moved to Decisions made.
+- `docs/decisions/0003-design-for-construction.md` (TWK-DDR-003 v0.2): acceptance recorded in the status line (record stays Draft).
+- `docs/decisions/0001-trl2-review-decisions.md` (TWK-DDR-001 v0.3) and `docs/decisions/0002-recommendations-accepted.md` (TWK-DDR-002 v0.2): O2 recorded as decided.
+- `docs/01-problem.md` (TWK-PRB-001 v0.6): co-design partner question answered.
+- `docs/02-concept.md` (TWK-PRC-001 v0.6): concentrator row names US915 for the first build; partner open question answered.
+- `bom/bom.csv` (line 7 specification text only, no quantity or price change) and `bom/bom-notes.md`: US915 for the first build.
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 2 (calculations): Restate the regulatory air-time check in TWK-CAL-001 for US915 (400 ms dwell time per channel, no 1 % duty cycle) alongside the EU868 figure, and confirm the result for nodes at SF9 every 5 min.
+2. Decision 2 (BOM): Price the US915 concentrator HAT and a 915 MHz antenna from a named supplier for lines 7 and 9.
+3. Decision 2 (docs): Name US915 in the build plan's concentrator and antenna descriptions and in safety stop S5 when the build plan is next revised.
+4. Decision 3 (docs): Approach a small municipal water utility in the Dallas and Fort Worth area through the Texas Water Utilities Association, and Dallas Makerspace for the build.
+
+### Points found in the review
+
+- Item 2 depends on FND-DDR-001 O1, which is no longer open: FieldNode decided US915 as its default first variant on 2026-10-02.
+- BOM line 7 still reads 'EU868 or US915 version to suit region'; with item 2 decided it should name US915 (text only, price unchanged).
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish approved all follow-up actions from the open-decision sign-off on 2026-10-02. No CAD model, drawing or picture changed. TwinKit is a scene-render repo with no `cad/src/product_model.py`, and none was created: the hero is the scene render, as before. The model is unchanged, so the scene was exported from `cad/src/concept_media.py` with `.kit/scene_export.py` (`export_views.py` needs a product model).
+
+### Approved follow-ups carried out
+
+1. Decision 2, calculations: done. `docs/04-calcs/sizing.py` prints a new tag [A7] and TWK-CAL-001 v0.4 restates the air-time check for US915: a 246.8 ms frame at SF9 every 5 min is 62 % of the 400 ms dwell time per channel and 71 s of air per day, with no duty-cycle limit; SF10 (452.6 ms) would exceed the dwell time, so the SF7 to SF9 range used for R1 is inside the limit. The EU868 figure stays alongside. R1 is unchanged.
+2. Decision 2, BOM: partly done. Line 7 is priced from the Seeed Studio WM1302 SPI US915 module and Seeed WM1302 Raspberry Pi HAT (HAT USD 20.79 at RobotShop; module USD 39 list at a reseller, about USD 60 for the parts) and kept at USD 80 for shipping from two sellers and a HAT that fits the Pi 5 class computer (Seeed lists the HAT for boards up to the Pi 4B). Line 9 stays at USD 12: a named supplier price for the 915 MHz antenna was not found. Both are indicative, not quoted.
+3. Decision 2, docs: done. TWK-BLD-001 v0.2 names US915 and the 915 MHz band in the concentrator and antenna descriptions and in safety stop S5.
+4. Decision 3, approach the municipal water utility and Dallas Makerspace: not done, outreach by Amish.
+5. Render scene: exported to `/home/claude/renders/twinkit` (view hero: `twinkit__hero.npz` and `.json`, plus `twinkit__jobs.json`). Photoreal render, card and social preview are made on Amish's Mac.
+
+### Results
+
+- Requirement status changes: none.
+- Value-engineering target: USD 300. Estimated cost of the constructable design: USD 334 (USD 34 over the target). `budget_usd` is unchanged. Mass is not tracked in this repo.
+
+### Documents changed
+
+- `docs/04-calcs/01-sizing.md` (TWK-CAL-001 v0.4), `docs/05-build-plan.md` (TWK-BLD-001 v0.2)
+- `bom/bom.csv` and `bom/bom-notes.md`, `docs/04-calcs/sizing.py`
+
+### Cross-repo actions
+
+None.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

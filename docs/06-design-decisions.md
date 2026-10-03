@@ -3,7 +3,7 @@ doc_id: TWK-DEC-001
 title: TwinKit design decisions register
 project: TwinKit
 doc_type: Design decisions register
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: Register opened with the open decisions, purchase checks and value engineering from the constructable design (TWK-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: Amish approved the recommendations for open items 1 to 3 on 2026-10-02 (TWK-DDR-003 accepted, US915 first build, first candidate partner); moved to decisions made
 ---
 
 # TwinKit design decisions register
@@ -21,11 +25,7 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-| # | Decision needed | Options | Recommendation | Affects in the build | Source |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Accept the design-for-construction changes (P1 to P9): battery box beside a 3-module UPS module, vents in the long walls, board standoffs, antenna bulkhead, cable entries, top-hat rail on screws, end stops, aluminium plate on feet, power and power-fail wiring | (a) accept as made; (b) accept with changes; (c) reject a change and say what replaces it | (a): none changes what the gateway does, its pitch or its safety case | The whole build plan follows them | TWK-DDR-003 |
-| 2 | Region and radio band of the first build (EU868 or US915) | The band of the region where the first FieldNodes are used | Match FieldNode's pilot region, which is itself still open (FND-DDR-001, O1) | Which concentrator HAT and antenna to buy (BOM lines 7 and 9) | `bom/bom.csv` line 7; FND-DDR-001 |
-| 3 | Co-design partner outside the lab | A small water utility, a makerspace or a municipal team | None made | Not part of the TRL 3 build; shapes the first field twin | TWK-DDR-002, O2 |
+None. All open decisions were decided on 2026-10-02.
 
 ## To confirm when parts are bought
 
@@ -56,3 +56,6 @@ Value-engineering target: USD 300 (a hypothetical control target, not a limit). 
 | 2026-09-25 | Budget raised from USD 200 to USD 300 to keep LoRaWAN compatibility (O1) | Amish, same instruction | TWK-DDR-002 |
 | 2026-09-25 | R1 judged with adaptive data rate required (N1); R12 defined at light load with heavy jobs in cool hours, a larger or metal enclosure as the fallback (N2) | Amish, same instruction | TWK-DDR-002 |
 | 2026-10-01 | `budget_usd` is a value-engineering target, not a spending limit | Amish: "the budgets are a hypothethical control target to ensure we are thinking along a value engineering lens. its ok to ensure wording reflects that the hypothesis budget was x - the real cost being accrued is y" | `.kit/STANDARDS.md` section 18 |
+| 2026-10-02 | Design for construction accepted: the changes P1 to P9 of TWK-DDR-003, as made | Amish: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." | TWK-DDR-003 |
+| 2026-10-02 | Region and radio band of the first build: US915, with the US915 concentrator HAT and a 915 MHz antenna, to match FieldNode's decided first variant | Amish: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." | `bom/bom.csv` line 7; FND-DDR-001, O1 |
+| 2026-10-02 | Co-design partner outside the lab: the first candidate to approach for the operator view is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner | Amish: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." | TWK-DDR-002, O2 |

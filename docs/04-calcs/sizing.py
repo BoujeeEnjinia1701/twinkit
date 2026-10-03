@@ -106,6 +106,13 @@ mix = sum(aloha_loss(per_ch / 3 / 3600, airtime(sf)) for sf in (7, 8, 9)) / 3
 tag("A3", f"even mix of SF7 to SF9: mean loss {mix * 100:.2f} %")
 duty = airtime(9) * 24 * 60 / INTERVAL_MIN / 86400
 tag("A4", f"EU868 node duty cycle at SF9, 5 min: {duty * 100:.2f} % of the 1 % limit per sub-band")
+# US915 (first build, TWK-DEC-001, 2026-10-02): no 1 % duty cycle; a 400 ms dwell time per channel applies to each uplink
+DWELL_S = 0.400
+ok_sf = [sf for sf in (7, 8, 9, 10) if airtime(sf) <= DWELL_S]
+tag("A7", f"US915: a node at SF9 and 5 min sends one {airtime(9) * 1000:.1f} ms frame per uplink, {airtime(9) / DWELL_S * 100:.0f} % of the "
+          f"{DWELL_S * 1000:.0f} ms dwell time per channel, and has no duty-cycle limit ({airtime(9) * 24 * 60 / INTERVAL_MIN:.0f} s of air per day); "
+          f"SF{max(ok_sf)} is the slowest spreading factor whose {PAYLOAD + LW_OVERHEAD}-byte frame fits the dwell time "
+          f"(SF10 takes {airtime(10) * 1000:.1f} ms), so the adaptive data rate range SF7 to SF9 is inside it")
 n9 = 0
 while aloha_loss((n9 + 1) * 60 / INTERVAL_MIN / CHANNELS / 3600, airtime(9)) < 0.01:
     n9 += 1

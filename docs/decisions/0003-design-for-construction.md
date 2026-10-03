@@ -3,7 +3,7 @@ doc_id: TWK-DDR-003
 title: TwinKit design for construction
 project: TwinKit
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -13,12 +13,16 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish on 2026-10-02 (TWK-DEC-001, item 1)
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-02
-- **Status:** proposed. Every change below was made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. Nothing here changes what TwinKit does, its pitch or its safety case, so no change is held as "Proposed, awaiting Amish"; the questions the build work raised are in the design decisions register (TWK-DEC-001).
+- **Status:** accepted. Amish, 2026-10-02: "APPROVED: The open decisions from the last wave (TremorTrace to ZeerBox) came in after the review and aren't on the page either." This approves the recommendation written for each open decision in the design decisions register (TWK-DEC-001 v0.1), including acceptance of every change below (P1 to P9), as made. The record stays Draft. Nothing here changes what TwinKit does, its pitch or its safety case.
 
 ## Context
 

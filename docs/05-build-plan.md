@@ -3,7 +3,7 @@ doc_id: TWK-BLD-001
 title: TwinKit prototype build plan
 project: TwinKit
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: First build plan; design made constructable (TWK-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: Concentrator, antenna and safety stop S5 name the US915 band chosen for the first build (TWK-DEC-001, 2026-10-02); no picture changed
 ---
 
 # TwinKit prototype build plan
@@ -217,9 +221,9 @@ Buy to specification, not brand. Line numbers are those of the bill of materials
 - **Gateway enclosure (lines 3 and 4).** 9-module DIN enclosure for a single-board computer, about 157.5 x 90 x 60, polycarbonate, DIN clip in the base, cover held by clips or screws. Worked as sections 3.3 and 3.4.
 - **Computer (line 5).** Quad-core Arm board with 4 GB, Ethernet, Wi-Fi and a 40-pin header, 85 x 56 with four mounting holes 58 x 49 apart (Raspberry Pi 5 class).
 - **Active cooler (line 6).** The clip-on heat sink and fan made for the computer, no taller than 8 above the board.
-- **Concentrator HAT (line 7).** SX1302 or SX1303 8-channel LoRaWAN concentrator on a 40-pin HAT for the region's band, 65 x 56 with holes on the computer's pattern and a U.FL antenna socket.
+- **Concentrator HAT (line 7).** SX1302 or SX1303 8-channel LoRaWAN concentrator on a 40-pin HAT, US915 version for the first build, 65 x 56 with holes on the computer's pattern and a U.FL antenna socket.
 - **microSD card (line 8).** 64 GB high-endurance, A2 class, flashed with the operating system before step 5.
-- **Antenna (line 9).** 3 dBi whip for the band, SMA bulkhead for a 6.5 hole, U.FL pigtail about 150 long.
+- **Antenna (line 9).** 3 dBi whip for the 915 MHz band, SMA bulkhead for a 6.5 hole, U.FL pigtail about 150 long.
 - **DC-DC converter (line 10).** DIN rail, 2 modules, 9 to 30 V in, 5.1 V 5 A out.
 - **UPS module (line 11).** DIN rail DC UPS, 3 modules wide, with no battery inside, for an external 12.8 V LiFePO4 pack: 9 to 30 V input, a buck-boost charger to 14.6 V at 0.5 A or less that stops charging below 0 °C and above 45 °C, pass-through output, and a power-fail output that is a dry contact or an open collector (never a voltage).
 - **Backup pack (line 12).** 12.8 V 1.5 Ah LiFePO4 (four 18650 cells in a 2 x 2 block), built-in protection board and fuse, no larger than 38 x 70 x 38, lead about 300 long, with a maker's datasheet.
@@ -367,7 +371,7 @@ Stop at each point. Carry on only when everything listed is true.
 - **S2. Before the adapter is plugged in.** The adapter is certified and double-insulated, 12 V DC, and its plug is undamaged. The fuse holder carries a 3.15 A time-delay fuse, not a larger one. With the fuse out, positive reads open to ground at the terminal blocks. Polarity at the terminal blocks is checked with a meter, not by wire colour. The pack lead is loose.
 - **S3. Before the pack is connected to the UPS module.** The UPS module's charger is set for LiFePO4 at 14.6 V (the maker's setting, checked in its datasheet), its charge current is 0.5 A or less, and its charge stops below 0 °C and above 45 °C. The pack's polarity matches the UPS module's battery terminals, checked with a meter.
 - **S4. First charge.** Attended the whole time, on the charging spot, with the battery box cover off; pack temperature checked by hand or thermometer every 15 minutes. Stop if the pack passes 45 °C, swells, smells or exceeds 14.6 V.
-- **S5. Before the concentrator transmits.** The antenna is connected and matches the region's band. Transmitting without an antenna can damage the radio.
+- **S5. Before the concentrator transmits.** The antenna is connected and is a 915 MHz antenna, matching the US915 concentrator. Transmitting without an antenna can damage the radio.
 - **S6. Before the gateway joins any network beyond the bench.** Every default credential is changed, the dashboard is on TLS, and no port is open beyond the local network.
 - **S7. Before any cabinet or mains-side installation (outside this plan).** Any wiring to an existing 12 V system or into a mains cabinet is done or checked by a qualified electrician under local code.
 

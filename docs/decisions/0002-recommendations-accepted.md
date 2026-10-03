@@ -3,9 +3,9 @@ doc_id: TWK-DDR-002
 title: TwinKit recommendations accepted
 project: TwinKit
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O2 recorded as decided by Amish on 2026-10-02
 ---
 
 # 0002: Recommendations accepted
@@ -47,11 +51,11 @@ The options for each item are those listed in `docs/REVIEW.md` (TRL 2 and TRL 3 
 
 No geometry changed, so `cad/src/model.py`, `bom/bom.csv` prices and drawing TWK-DWG-001 (Rev P1) are unchanged in content; the model, drawing and media were regenerated only for the site address change. No reworded pitch or problem line was recommended, so the `pitch` and `problem` text in `project.yaml` and `README.md` stay as they were.
 
-*Table 2. Items still open.*
+*Table 2. Items left open on 2026-09-25 (O2 decided by Amish on 2026-10-02).*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O2 | Co-design partner outside the lab (a small water utility, a makerspace or a municipal team). No recommendation was made. | Proposed, awaiting Amish |
+| O2 | Co-design partner outside the lab (a small water utility, a makerspace or a municipal team). No recommendation was made on 2026-09-25. | Decided by Amish, 2026-10-02 (TWK-DEC-001): the first candidate to approach is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner |
 
 ## Consequences
 

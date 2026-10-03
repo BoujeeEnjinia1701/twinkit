@@ -3,7 +3,7 @@ doc_id: TWK-PRC-001
 title: TwinKit design precis
 project: TwinKit
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: "Constructable design (TWK-DDR-003): battery box, vents in the long walls, fittings; cost against the value-engineering target; GA Rev P3; build plan TWK-BLD-001"
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: First build band (US915) and co-design partner from Amish's decisions of 2026-10-02 (TWK-DEC-001)
 ---
 
 # TwinKit design precis
@@ -83,7 +87,7 @@ Table 1. Main components (numbers match `bom/bom.csv` and Figure 3).
 | 1, 2 | Bench plate and DIN rail | 6 mm aluminium plate on rubber feet; 350 mm TS35 top-hat rail on three M4 screws | Plate optional when an equipment cabinet exists |
 | 3, 4 | Gateway enclosure | 9-module DIN enclosure, vented, clear cover | Holds the computer and concentrator |
 | 5, 6 | Single-board computer and cooler | 4 GB quad-core Arm board (Raspberry Pi 5 class) | Runs all software; about 2.4 GB used. Decided by Amish, 2026-09-25 (TWK-DDR-002) |
-| 7 | LoRaWAN concentrator | SX1302 or SX1303 8-channel HAT | Region version (EU868 or US915). Decided by Amish, 2026-09-25 (TWK-DDR-002) |
+| 7 | LoRaWAN concentrator | SX1302 or SX1303 8-channel HAT | Region version (EU868 or US915). Decided by Amish, 2026-09-25 (TWK-DDR-002); the first build is US915, decided 2026-10-02 (TWK-DEC-001) |
 | 8 | Storage | 64 GB high-endurance microSD | SSD upgrade is an option |
 | 9 | Antenna | 3 dBi whip on an SMA bulkhead | Mounted on the cover or outside a cabinet; tip 264 mm above the plate |
 | 10 | DC-DC converter | 9 to 30 V in, 5.1 V 5 A out | Accepts a 12 V adapter or an existing 12 V system |
@@ -164,7 +168,7 @@ The model is now constructable (TWK-DDR-003, open for Amish's review): every par
 
 All open decisions are kept in the design decisions register ([TWK-DEC-001](06-design-decisions.md)).
 
-- Co-design partner outside the lab. Proposed, awaiting Amish.
+- Co-design partner outside the lab. Decided by Amish, 2026-10-02 (TWK-DEC-001): the first candidate to approach is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner.
 - Processor temperature, card endurance and the power figures are assumptions that only measurement can settle.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

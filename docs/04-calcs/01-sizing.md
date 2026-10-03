@@ -3,7 +3,7 @@ doc_id: TWK-CAL-001
 title: TwinKit sizing calculations
 project: TwinKit
 doc_type: Calculation
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Constructable design (TWK-DDR-003). Vents in the long walls, battery box, 350 mm rail, new fittings costed; shielded end-wall sensitivity [F7]; budget treated as a value-engineering target
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: "Regulatory air-time check restated for US915 alongside EU868 (new tag [A7]); no requirement status changed"
 ---
 
 # TwinKit sizing calculations
@@ -56,7 +60,8 @@ The design case is the R1 design point: 50 sensor nodes, each sending a 20-byte 
 - **Time on air.** A 33-byte frame takes 71.9 ms at SF7, 133.6 ms at SF8, 246.8 ms at SF9, 452.6 ms at SF10 and 1810.4 ms at SF12 [A2]. These agree with FieldNode's airtime table (FND-PRC-001 v0.2, Table 3).
 - **Loss.** With every node on one spreading factor, collisions lose 0.30 % at SF7, 0.56 % at SF8, 1.02 % at SF9, 1.87 % at SF10 and 7.27 % at SF12 [A2]. An even mix of SF7, SF8 and SF9 loses 0.21 % [A3]. At FieldNode's 15 min default every case up to SF10 stays under 1 % (0.34 % at SF9) [A2].
 - **Verdict.** R1, as restated in TWK-REQ-001 v0.4, requires adaptive data rate so that each node uses the fastest spreading factor its link allows. For an even SF7 to SF9 mix the loss is 0.21 % against 1 % [A6], so R1 is met. For information: if all 50 nodes were forced to SF9 at 5 min the loss would be 1.02 %, and the largest fleet under 1 % in that case is 48 nodes [A5]. FieldNode's 15 min default keeps every case up to SF10 under 1 % [A2].
-- **Regulatory duty cycle.** At SF9 and 5 min each node uses 0.08 % of air time, well inside the 1 % EU868 sub-band limit [A4]. The Things Network's 30 s per day fair-use limit does not apply on a private TwinKit gateway, but a node at SF9 and 5 min would exceed it (71 s per day) if moved to that public network [A2].
+- **US915 dwell time.** The first build is US915 (TWK-DEC-001, 2026-10-02), which has no 1 % duty cycle but limits each transmission to a 400 ms dwell time per channel. A node at SF9 and 5 min sends one 246.8 ms frame per uplink, 62 % of the dwell time, and uses 71 s of air per day [A7]. SF9 is the slowest spreading factor that fits: a 33-byte frame at SF10 takes 452.6 ms and would exceed it, so the SF7 to SF9 range that adaptive data rate uses for R1 is inside the US915 limit [A7]. R1 and its status are unchanged.
+- **Regulatory duty cycle (EU868).** At SF9 and 5 min each node uses 0.08 % of air time, well inside the 1 % EU868 sub-band limit [A4]. The Things Network's 30 s per day fair-use limit does not apply on a private TwinKit gateway, but a node at SF9 and 5 min would exceed it (71 s per day) if moved to that public network [A2].
 
 ## B. Storage and card wear (R3, R7)
 

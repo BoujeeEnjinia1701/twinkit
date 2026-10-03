@@ -3,9 +3,9 @@ doc_id: TWK-DDR-001
 title: TwinKit TRL 2 review decisions
 project: TwinKit
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O2 recorded as decided by Amish on 2026-10-02
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted in part. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). Items D1 to D7 and O1 are decided by Amish, 2026-09-25: go with recommendation (see TWK-DDR-002). O2 had no recommendation and remains "Proposed, awaiting Amish".
+- **Status:** accepted in part. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). Items D1 to D7 and O1 are decided by Amish, 2026-09-25: go with recommendation (see TWK-DDR-002). O2 had no recommendation on 2026-09-25; Amish decided it on 2026-10-02 (TWK-DEC-001).
 
 ## Context
 
@@ -46,12 +50,12 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 | D6 | Twin file schema | The YAML fields sketched in the precis: project, model, and per channel an id, node, part (BOM number), unit, expected value (constant, curve or calculation reference), tolerance and hold time. | Decided by Amish, 2026-09-25: go with recommendation |
 | D7 | Backup pack | Off-the-shelf 12.8 V LiFePO4 pack with a built-in BMS and fuse; a CellGuard-protected pack only in a later, larger version. | Decided by Amish, 2026-09-25: go with recommendation |
 
-*Table 2. Items left open by v0.1. O1 is now decided; O2 remains open.*
+*Table 2. Items left open by v0.1. O1 was decided on 2026-09-25 and O2 on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
 | O1 | Budget. The TRL 2 review recommended raising `budget_usd` from $200 to $300 (option a), to keep LoRaWAN compatibility. Under the session instruction the budget is not changed: `budget_usd` stays at $200, and $300 is recorded as the recommended figure. TWK-CAL-001 [I2] states the $290 parts cost against both figures. The design is costed for option (a) because D1 (LoRaWAN) is adopted. | Decided by Amish, 2026-09-25: go with recommendation; `budget_usd` raised to $300 (TWK-DDR-002) |
-| O2 | Co-design partner outside the lab (a small water utility, a makerspace or a municipal team). No recommendation was made. | Proposed, awaiting Amish |
+| O2 | Co-design partner outside the lab (a small water utility, a makerspace or a municipal team). No recommendation was made on 2026-09-25. | Decided by Amish, 2026-10-02 (TWK-DEC-001): the first candidate to approach is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner |
 
 No reworded pitch or problem line was recommended, so `project.yaml` and `README.md` keep the existing wording.
 

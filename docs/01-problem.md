@@ -3,7 +3,7 @@ doc_id: TWK-PRB-001
 title: TwinKit problem statement
 project: TwinKit
 doc_type: Problem statement
-version: "0.5"
+version: "0.6"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Budget worded as a value-engineering target; cost of the constructable design (TWK-DDR-003)
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Co-design partner question answered by Amish's decision of 2026-10-02 (TWK-DEC-001)
 ---
 
 # TwinKit problem statement
@@ -86,4 +90,4 @@ TwinKit's contribution is the thin layer between these: a mapping from each sens
 - First example twin: FieldNode (battery state of charge against its power-budget calculation). Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
 - Radio: a full LoRaWAN concentrator rather than a point-to-point LoRa receiver. Decided by Amish, 2026-09-25: go with recommendation (TWK-DDR-002).
 - Budget: decided by Amish, 2026-09-25: go with recommendation, `budget_usd` raised from $200 to $300 (TWK-DDR-002). Value-engineering target: USD 300. Estimated cost of the constructable design: USD 334 (USD 34 over the target; TWK-CAL-001 v0.3, TWK-DDR-003).
-- Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? No recommendation; proposed, awaiting Amish.
+- Who outside the lab should co-design the operator view (a small water utility, a makerspace, a municipal team)? Decided by Amish, 2026-10-02 (TWK-DEC-001): the first candidate to approach is a small municipal water utility in the Dallas and Fort Worth area, found through the Texas Water Utilities Association, with Dallas Makerspace as the build and test partner; not yet approached.
